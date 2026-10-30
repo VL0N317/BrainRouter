@@ -1422,6 +1422,30 @@
       localStorage.setItem('br_api_keys', JSON.stringify(keys));
     }
 
+    // ── One-Click Instant Setup Link Handler ──
+    function handleOneClickSetup() {
+      try {
+        const hash = window.location.hash;
+        if (hash.startsWith('#setup=')) {
+          const raw = hash.slice(7);
+          const data = JSON.parse(atob(raw));
+          if (data && typeof data === 'object') {
+            saveApiKeys(data);
+            if (window.history && window.history.replaceState) {
+              window.history.replaceState(null, '', window.location.pathname);
+            }
+            setTimeout(() => {
+              showToast('All 3 API Keys configured & activated! 🚀', 4500);
+            }, 600);
+            return true;
+          }
+        }
+      } catch (e) {
+        console.warn('Auto-setup error:', e);
+      }
+      return false;
+    }
+
     function openSettingsModal() {
       const keys = getApiKeys();
       document.getElementById('key-openrouter').value = keys.openrouter || '';
@@ -2169,14 +2193,17 @@ Respond with ONLY valid JSON:
       scrollBottom();
     }
 
-    // Auto-prompt to configure API keys on first load if none set
+    // Auto-setup on load if #setup hash is present
     window.addEventListener('DOMContentLoaded', () => {
-      const keys = getApiKeys();
-      const hasAny = Object.values(keys).some(k => k && k.trim());
-      if (!hasAny) {
-        setTimeout(() => {
-          showToast('Welcome! Configure your API keys to enable model routing ⚙️', 4000);
-        }, 1000);
+      const activated = handleOneClickSetup();
+      if (!activated) {
+        const keys = getApiKeys();
+        const hasAny = Object.values(keys).some(k => k && k.trim());
+        if (hasAny) {
+          setTimeout(() => {
+            showToast('BrainRouter is ready! 🧠 (Providers connected)', 3500);
+          }, 800);
+        }
       }
     });
   </script>
