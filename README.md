@@ -53,15 +53,18 @@ then based on that it calls whichever API is needed. the whole routing step take
 
 its literally one HTML file so just download it and open it in your browser. thats it.
 
-for it to actually work you need API keys:
+### zero-config free tier
+BrainRouter now runs **out-of-the-box with zero API keys required** using a free public fallback and built-in image generator.
 
-- **Gemini** (required, this is the router) → [aistudio.google.com](https://aistudio.google.com)
-- **OpenAI** → [platform.openai.com](https://platform.openai.com)
-- **Grok** → [console.x.ai](https://console.x.ai)
-- **Claude** → [console.anthropic.com](https://console.anthropic.com)
-- **Stability AI** → [platform.stability.ai](https://platform.stability.ai)
+### recommended free api keys (for instant speed & zero limits)
+To get 10x faster responses and unlimited quotas, add any of these 100% free keys in the **API Keys** panel (top right):
 
-paste them in the settings panel (the icon in the top right) and youre good
+- **Google Gemini** (100% Free · Router & Reasoning) → [aistudio.google.com](https://aistudio.google.com/app/apikey)
+- **Groq Cloud** (100% Free · LLaMA 3.3 70B & 3.1 8B at 500+ tokens/s) → [console.groq.com](https://console.groq.com/keys)
+- **OpenRouter** (Universal key · access Claude 3.5, GPT-4o, Grok, Gemini, & free models) → [openrouter.ai/keys](https://openrouter.ai/keys)
+- **Direct Keys** (Optional): OpenAI, Anthropic Claude, xAI Grok
+
+Paste them into the API Keys settings modal in the app — keys are stored strictly in your browser's `localStorage` and never sent to any server.
 
 ---
 

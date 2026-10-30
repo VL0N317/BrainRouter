@@ -703,6 +703,96 @@
       transform: scale(1.02);
     }
 
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .settings-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 15px;
+      border-radius: 24px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .settings-btn:hover {
+      background: var(--surface);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.02);
+    }
+
+    /* ── ROUTE BADGE & MODEL ROSTER ACTIVE ── */
+    .route-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+      user-select: none;
+      animation: fadeIn .2s ease;
+    }
+
+    .route-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .route-badge-model {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .route-badge-sep {
+      opacity: .4;
+    }
+
+    .route-badge-reason {
+      color: var(--muted);
+    }
+
+    .thinking-status {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .model-item.active {
+      background: white;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      box-shadow: 0 2px 8px var(--accent-glow);
+    }
+
+    .model-item.active .model-dot {
+      animation: pulseDot 1s infinite alternate;
+    }
+
+    @keyframes pulseDot {
+      from { transform: scale(1); opacity: 0.8; }
+      to { transform: scale(1.4); opacity: 1; }
+    }
+
     .main {
       padding-top: 52px;
     }
@@ -956,13 +1046,22 @@
 
   <!-- TOP RIGHT HEADER BAR -->
   <div class="topbar">
-    <button class="sign-in-btn" id="sign-in-btn" onclick="openAuthModal('login')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-      Sign in
-    </button>
+    <div class="topbar-actions">
+      <button class="settings-btn" id="settings-btn" onclick="openSettingsModal()" title="Configure API Keys & Model Router">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        API Keys
+      </button>
+      <button class="sign-in-btn" id="sign-in-btn" onclick="openAuthModal('login')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Sign in
+      </button>
+    </div>
   </div>
 
   <!-- AUTH MODAL -->
@@ -1048,6 +1147,90 @@
     </div>
   </div>
 
+  <!-- SETTINGS MODAL -->
+  <div class="modal-overlay" id="settings-overlay" onclick="settingsOverlayClick(event)">
+    <div class="auth-modal" id="settings-modal" style="width: 480px;">
+      <button class="auth-close" onclick="closeSettingsModal()">✕</button>
+
+      <div class="auth-logo">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="7" fill="#c96442"/>
+          <path d="M14 8.5 C12.5 8.5 11.2 9.3 10.5 10.6 C9.7 10.1 8.4 10.4 7.8 11.5 C7.2 12.5 7.6 13.8 8.6 14.5 C8.1 15.4 8.3 16.7 9.5 17.4 C10.3 17.9 11.5 18 12.8 18 L14 18 L14 8.5 Z" fill="white"/>
+          <path d="M14 8.5 C15.5 8.5 16.8 9.3 17.5 10.6 C18.3 10.1 19.6 10.4 20.2 11.5 C20.8 12.5 20.4 13.8 19.4 14.5 C19.9 15.4 19.7 16.7 18.5 17.4 C17.7 17.9 16.5 18 15.2 18 L14 18 L14 8.5 Z" fill="white"/>
+          <line x1="14" y1="9.5" x2="14" y2="17.5" stroke="#c96442" stroke-width="0.9" stroke-linecap="round" stroke-dasharray="1.5 1.2"/>
+          <line x1="14" y1="8.5" x2="14" y2="4" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="11.8" y="2.8" width="4.4" height="1.6" rx="0.8" fill="white"/>
+          <polyline points="7.8,13 3.5,13 3.5,10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <rect x="2.3" y="9" width="1.6" height="3.8" rx="0.8" fill="white"/>
+          <polyline points="20.2,13 24.5,13 24.5,10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <rect x="24.1" y="9" width="1.6" height="3.8" rx="0.8" fill="white"/>
+          <line x1="14" y1="18" x2="14" y2="24" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="11.8" y="23.6" width="4.4" height="1.6" rx="0.8" fill="white"/>
+        </svg>
+        <span>Model Router Settings</span>
+      </div>
+
+      <div class="auth-headline">Configure API Keys</div>
+      <div class="auth-sub">BrainRouter dynamically routes requests across these providers. Configure one or all — keys are stored safely in your browser's local storage.</div>
+
+      <div class="auth-fg">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <label class="auth-label" style="margin:0;">OpenRouter Key <span style="color:var(--accent);font-weight:600;">(Single Key for All Models)</span></label>
+          <a href="https://openrouter.ai/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+        </div>
+        <input class="auth-input" id="key-openrouter" type="password" placeholder="sk-or-v1-..." />
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Connects Claude 3.5, GPT-4o, Grok 2, Gemini & LLaMA 3.3 under one key.</div>
+      </div>
+
+      <div class="auth-fg">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <label class="auth-label" style="margin:0;">Google Gemini API Key <span style="color:#4285f4;font-weight:600;">(Router & Reasoning)</span></label>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Free Key ↗</a>
+        </div>
+        <input class="auth-input" id="key-gemini" type="password" placeholder="AIzaSy..." />
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Powers fast intent classification & deep analysis.</div>
+      </div>
+
+      <div class="auth-fg">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <label class="auth-label" style="margin:0;">Groq API Key <span style="color:#c96442;font-weight:600;">(Ultra-Fast LLaMA)</span></label>
+          <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Free Key ↗</a>
+        </div>
+        <input class="auth-input" id="key-groq" type="password" placeholder="gsk_..." />
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Sub-second inference via LLaMA 3.3 70B & 3.1 8B.</div>
+      </div>
+
+      <div class="auth-fg">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <label class="auth-label" style="margin:0;">Anthropic Claude API Key</label>
+          <a href="https://console.anthropic.com/settings/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+        </div>
+        <input class="auth-input" id="key-anthropic" type="password" placeholder="sk-ant-..." />
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to Claude 3.5 Sonnet for programming & code logic.</div>
+      </div>
+
+      <div class="auth-fg">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <label class="auth-label" style="margin:0;">OpenAI API Key</label>
+          <a href="https://platform.openai.com/api-keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+        </div>
+        <input class="auth-input" id="key-openai" type="password" placeholder="sk-proj-..." />
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to GPT-4o & GPT-4o mini.</div>
+      </div>
+
+      <div class="auth-fg">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <label class="auth-label" style="margin:0;">xAI (Grok) API Key</label>
+          <a href="https://console.x.ai" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+        </div>
+        <input class="auth-input" id="key-xai" type="password" placeholder="xai-..." />
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to Grok 2 for witty and real-time chat.</div>
+      </div>
+
+      <button class="auth-submit" onclick="saveSettings()">Save Configuration</button>
+    </div>
+  </div>
+
   <!-- SIDEBAR -->
   <nav class="sidebar">
     <div class="logo">
@@ -1086,32 +1269,46 @@
     </button>
 
     <div class="sidebar-section">Model Router</div>
-    <div class="model-item">
-      <div class="model-dot" style="background:#4285f4"></div>
+    <div class="model-item" id="roster-claude">
+      <div class="model-dot" style="background:#d97706"></div>
       <div class="model-info">
-        <div class="model-name">LLaMA 3.1 8B</div>
-        <div class="model-sub">Router · Reasoning</div>
+        <div class="model-name">Claude 3.5 Sonnet</div>
+        <div class="model-sub">Code · Tech · Logic</div>
       </div>
     </div>
-    <div class="model-item">
+    <div class="model-item" id="roster-openai">
       <div class="model-dot" style="background:#10b981"></div>
       <div class="model-info">
-        <div class="model-name">GrokAI Inference</div>
-        <div class="model-sub">Ultra-fast/RealTime</div>
+        <div class="model-name">GPT-4o mini</div>
+        <div class="model-sub">General Q&A · Synthesis</div>
       </div>
     </div>
-    <div class="model-item">
-      <div class="model-dot" style="background:#f59e0b"></div>
+    <div class="model-item" id="roster-gemini">
+      <div class="model-dot" style="background:#4285f4"></div>
       <div class="model-info">
-        <div class="model-name">ChatGPT Memory</div>
-        <div class="model-sub">Context · History</div>
+        <div class="model-name">Gemini 1.5 Flash</div>
+        <div class="model-sub">Router · Deep Research</div>
       </div>
     </div>
-    <div class="model-item">
+    <div class="model-item" id="roster-grok">
+      <div class="model-dot" style="background:#1a1714"></div>
+      <div class="model-info">
+        <div class="model-name">Grok 2</div>
+        <div class="model-sub">Witty · Casual Banter</div>
+      </div>
+    </div>
+    <div class="model-item" id="roster-llama">
       <div class="model-dot" style="background:#c96442"></div>
       <div class="model-info">
-        <div class="model-name">BrainRouter</div>
-        <div class="model-sub">Powered by LLaMA · Local LLM</div>
+        <div class="model-name">LLaMA 3.3 70B</div>
+        <div class="model-sub">Ultra-Fast Groq Engine</div>
+      </div>
+    </div>
+    <div class="model-item" id="roster-image">
+      <div class="model-dot" style="background:#8b5cf6"></div>
+      <div class="model-info">
+        <div class="model-name">Image Generator</div>
+        <div class="model-sub">Pollinations · Creative Art</div>
       </div>
     </div>
 
@@ -1187,24 +1384,76 @@
           </button>
         </div>
       </div>
-      <div class="input-hint">BrainRouter · Powered by LLaMA 3.1 via LLM Running On Deeraj's MBP · May make mistakes lol!</div>
+      <div class="input-hint">BrainRouter · Intelligent Multi-Model Dynamic Switching Engine · Made by VL0N317</div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
-    /* ── CONFIG ── */
-    const GROQ_KEY = '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';
-    const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-    const GROQ_MODEL = 'llama-3.1-8b-instant';
+    /* ── CONFIG & MODEL METADATA ── */
     const FREE_MSG_LIMIT = 20;
+
+    const MODEL_META = {
+      claude: { name: 'Claude 3.5 Sonnet', color: '#d97706', label: 'Code & Logic' },
+      openai: { name: 'GPT-4o mini', color: '#10b981', label: 'General Knowledge' },
+      gemini: { name: 'Gemini 1.5 Flash', color: '#4285f4', label: 'Deep Reasoning' },
+      grok: { name: 'Grok 2', color: '#1a1714', label: 'Witty & Casual' },
+      llama: { name: 'LLaMA 3.3 70B', color: '#c96442', label: 'Ultra-Fast' },
+      image: { name: 'Image Generator', color: '#8b5cf6', label: 'Creative Image' }
+    };
 
     let history = [];
     let busy = false;
     let abortCtrl = null;
     let msgCount = parseInt(localStorage.getItem('br_msg_count') || '0');
     let loggedIn = false;
+
+    /* ── API KEY MANAGEMENT ── */
+    function getApiKeys() {
+      try {
+        return JSON.parse(localStorage.getItem('br_api_keys') || '{}');
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveApiKeys(keys) {
+      localStorage.setItem('br_api_keys', JSON.stringify(keys));
+    }
+
+    function openSettingsModal() {
+      const keys = getApiKeys();
+      document.getElementById('key-openrouter').value = keys.openrouter || '';
+      document.getElementById('key-gemini').value = keys.gemini || '';
+      document.getElementById('key-groq').value = keys.groq || '';
+      document.getElementById('key-anthropic').value = keys.anthropic || '';
+      document.getElementById('key-openai').value = keys.openai || '';
+      document.getElementById('key-xai').value = keys.xai || '';
+      document.getElementById('settings-overlay').classList.add('open');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-overlay').classList.remove('open');
+    }
+
+    function settingsOverlayClick(e) {
+      if (e.target === document.getElementById('settings-overlay')) closeSettingsModal();
+    }
+
+    function saveSettings() {
+      const keys = {
+        openrouter: document.getElementById('key-openrouter').value.trim(),
+        gemini: document.getElementById('key-gemini').value.trim(),
+        groq: document.getElementById('key-groq').value.trim(),
+        anthropic: document.getElementById('key-anthropic').value.trim(),
+        openai: document.getElementById('key-openai').value.trim(),
+        xai: document.getElementById('key-xai').value.trim()
+      };
+      saveApiKeys(keys);
+      closeSettingsModal();
+      showToast('API Configuration saved! 🚀');
+    }
 
     /* ── AUTH MODAL ── */
     function openAuthModal(tab = 'login', showBadge = false) {
@@ -1262,7 +1511,7 @@
       showToast('Google sign-in coming soon — use email for now');
     }
 
-    /* ── HELPERS ── */
+    /* ── DOM & UI HELPERS ── */
     const ta = document.getElementById('chat-input');
     const msgsInner = document.getElementById('msgs-inner');
     const msgsWrap = document.getElementById('msgs-wrap');
@@ -1272,10 +1521,14 @@
 
     function scrollBottom() { msgsWrap.scrollTo({ top: msgsWrap.scrollHeight, behavior: 'smooth' }); }
 
-    function showToast(msg, dur = 3000) {
+    function showToast(msg, dur = 3200) {
       const t = document.getElementById('toast');
       t.textContent = msg; t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), dur);
+    }
+
+    function escapeHtml(text) {
+      return (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     /* Auto-resize textarea */
@@ -1289,30 +1542,383 @@
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
 
-    /* ── RENDER MARKDOWN (simple) ── */
+    /* ── SIDEBAR ROSTER HIGHLIGHT ── */
+    function highlightRoster(modelKey) {
+      document.querySelectorAll('.model-item').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById(`roster-${modelKey}`);
+      if (target) target.classList.add('active');
+    }
+
+    function clearRosterHighlight() {
+      document.querySelectorAll('.model-item').forEach(el => el.classList.remove('active'));
+    }
+
+    /* ── RENDER MARKDOWN (Images, Code, Lists, Formatting) ── */
     function renderMarkdown(text) {
-      // escape html first
-      let s = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      // code blocks
+      // 1. Extract and preserve markdown images
+      const imgPlaceholders = [];
+      let s = text.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, (match, alt, url) => {
+        const id = `__IMG_PH_${imgPlaceholders.length}__`;
+        imgPlaceholders.push(`
+          <div style="margin:12px 0;">
+            <img src="${url}" alt="${alt || 'Generated Image'}" loading="lazy" style="max-width:100%;max-height:480px;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.1);display:block;border:1px solid var(--border);" />
+            <div style="margin-top:6px;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--accent);text-decoration:none;">View Full Resolution ↗</a></div>
+          </div>
+        `);
+        return id;
+      });
+
+      // 2. Escape HTML
+      s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      // 3. Restore images
+      imgPlaceholders.forEach((imgHtml, idx) => {
+        s = s.replace(`__IMG_PH_${idx}__`, imgHtml);
+      });
+
+      // 4. Code blocks
       s = s.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trim()}</code></pre>`);
-      // inline code
+      // 5. Inline code
       s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-      // bold
+      // 6. Links
+      s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">$1</a>');
+      // 7. Bold & Italic
       s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      // italic
       s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-      // headings
+      // 8. Headings
       s = s.replace(/^### (.+)$/gm, '<h3>$1</h3>');
       s = s.replace(/^## (.+)$/gm, '<h2>$1</h2>');
       s = s.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-      // unordered list
+      // 9. Lists
       s = s.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
       s = s.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-      // ordered list
       s = s.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-      // newlines to paragraphs (only outside pre)
+      // 10. Paragraphs
       s = s.split(/\n\n+/).map(p => p.startsWith('<') ? p : `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
       return s;
+    }
+
+    /* ── INTELLIGENT ROUTER LOGIC ── */
+    function heuristicClassifier(prompt) {
+      const p = prompt.toLowerCase();
+
+      // Image generation
+      if (/\b(generate|draw|paint|create|make|render)\b.*\b(image|picture|photo|illustration|art|portrait|wallpaper|drawing)\b/.test(p) ||
+          /\b(image|picture|photo) of\b/.test(p)) {
+        return { model: 'image', reason: 'Visual image generation requested' };
+      }
+
+      // Code & Technical
+      if (/\b(code|python|javascript|typescript|js|ts|html|css|react|vue|node|sql|regex|api|bug|error|exception|debug|script|function|class|algorithm|git|pointer|compiler|c\+\+|rust|java|swift|golang|syntax|docker|bash|shell|terminal)\b/.test(p) ||
+          p.includes('```') || /def |function |const |let |var |import |export |#include/.test(prompt)) {
+        return { model: 'claude', reason: 'Technical programming & code logic' };
+      }
+
+      // Grok / Humor / Casual banter
+      if (/\b(joke|roast|funny|hilarious|sarcasm|sarcastic|witty|humor|meme|bruh|sup|bro|yo|diss)\b/.test(p) ||
+          (p.length < 15 && /\b(hi|hello|hey|what's up|howdy)\b/.test(p))) {
+        return { model: 'grok', reason: 'Casual banter & witty conversation' };
+      }
+
+      // Deep Research & Science
+      if (/\b(research|scientific|quantum|physics|paper|study|compare|contrast|analyze|mechanism|proof|theorem|derive|in-depth|deep dive|explain why)\b/.test(p)) {
+        return { model: 'gemini', reason: 'Deep research & multi-step reasoning' };
+      }
+
+      // General Q&A
+      return { model: 'openai', reason: 'General conversation & structured knowledge' };
+    }
+
+    async function routeQuery(prompt) {
+      const keys = getApiKeys();
+
+      const routingSystemPrompt = `You are BrainRouter's real-time intent classifier.
+Analyze the user query and decide which model is best suited:
+- "claude": coding, programming, debugging, writing scripts, algorithms, technical specs.
+- "openai": factual explanations, structured summaries, standard Q&A, business writing.
+- "grok": banter, jokes, witty conversation, sarcasm, informal chat.
+- "gemini": deep research, science, mathematics, multi-step logical reasoning.
+- "image": asking to generate, draw, render, create an image or artwork.
+- "llama": quick general answers, definitions, fast lookups.
+
+Respond with ONLY valid JSON:
+{"model": "claude"|"openai"|"grok"|"gemini"|"image"|"llama", "reason": "concise explanation in 4-8 words"}`;
+
+      // 1. Try Gemini Router if key present
+      if (keys.gemini) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${keys.gemini.trim()}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: `${routingSystemPrompt}\n\nUser Query: "${prompt}"\nJSON:` }] }],
+              generationConfig: { responseMimeType: "application/json", temperature: 0.1 }
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            const parsed = JSON.parse(text);
+            if (parsed.model && MODEL_META[parsed.model]) return parsed;
+          }
+        } catch (e) {
+          console.warn('Gemini router failed, falling back to heuristic:', e);
+        }
+      }
+
+      // 2. Try Groq Router if key present
+      if (keys.groq) {
+        try {
+          const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${keys.groq.trim()}` },
+            body: JSON.stringify({
+              model: 'llama-3.1-8b-instant',
+              messages: [
+                { role: 'system', content: routingSystemPrompt },
+                { role: 'user', content: prompt }
+              ],
+              temperature: 0.1,
+              response_format: { type: "json_object" }
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const parsed = JSON.parse(data.choices?.[0]?.message?.content || '{}');
+            if (parsed.model && MODEL_META[parsed.model]) return parsed;
+          }
+        } catch (e) {
+          console.warn('Groq router failed, falling back to heuristic:', e);
+        }
+      }
+
+      // 3. Fallback to intelligent heuristic classifier
+      return heuristicClassifier(prompt);
+    }
+
+    /* ── API CALL HELPERS ── */
+    async function callOpenAICompatible(url, key, model, messages, abortSignal, extraHeaders = {}) {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${key.trim()}`,
+          ...extraHeaders
+        },
+        signal: abortSignal,
+        body: JSON.stringify({
+          model: model,
+          messages: messages,
+          temperature: 0.7,
+          max_tokens: 3000
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        const msg = err?.error?.message || err?.message || `HTTP ${res.status}`;
+        throw new Error(`${model}: ${msg}`);
+      }
+
+      const data = await res.json();
+      return data.choices?.[0]?.message?.content || '[No response received]';
+    }
+
+    async function callGeminiDirect(key, model, messages, abortSignal) {
+      const contents = [];
+      let systemInstruction = null;
+
+      for (const m of messages) {
+        if (m.role === 'system') {
+          systemInstruction = { parts: [{ text: m.content }] };
+        } else {
+          contents.push({
+            role: m.role === 'assistant' || m.role === 'model' ? 'model' : 'user',
+            parts: [{ text: m.content }]
+          });
+        }
+      }
+
+      if (contents.length === 0) contents.push({ role: 'user', parts: [{ text: 'Hello' }] });
+
+      const reqBody = { contents };
+      if (systemInstruction) reqBody.systemInstruction = systemInstruction;
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key.trim()}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: abortSignal,
+        body: JSON.stringify(reqBody)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        const msg = err?.error?.message || `HTTP ${res.status}`;
+        throw new Error(`Gemini: ${msg}`);
+      }
+
+      const data = await res.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || '[No response from Gemini]';
+    }
+
+    async function callAnthropicDirect(key, model, messages, abortSignal) {
+      let system = '';
+      const formatted = [];
+
+      for (const m of messages) {
+        if (m.role === 'system') {
+          system = m.content;
+        } else {
+          formatted.push({
+            role: m.role === 'assistant' || m.role === 'model' ? 'assistant' : 'user',
+            content: m.content
+          });
+        }
+      }
+
+      const reqBody = {
+        model: model,
+        max_tokens: 3000,
+        messages: formatted
+      };
+      if (system) reqBody.system = system;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': key.trim(),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        signal: abortSignal,
+        body: JSON.stringify(reqBody)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        const msg = err?.error?.message || `HTTP ${res.status}`;
+        throw new Error(`Claude: ${msg}`);
+      }
+
+      const data = await res.json();
+      return data.content?.[0]?.text || '[No response from Claude]';
+    }
+
+    /* ── DISPATCH TO ROUTED MODEL ── */
+    async function dispatchModelRequest(decision, messages, abortSignal) {
+      const keys = getApiKeys();
+      const lastUserMsg = messages[messages.length - 1].content;
+
+      // 1. IMAGE GENERATOR (Pollinations.ai — free, instant, high quality)
+      if (decision.model === 'image') {
+        const cleanPrompt = lastUserMsg.replace(/^(generate|draw|create|render|make)\s+(an?\s+)?(image|picture|photo)\s+(of\s+)?/i, '').trim();
+        const encodedPrompt = encodeURIComponent(cleanPrompt || 'artwork');
+        const seed = Math.floor(Math.random() * 999999);
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true&seed=${seed}`;
+        return `Here is your generated image for **"${cleanPrompt}"**:\n\n![${cleanPrompt}](${imageUrl})`;
+      }
+
+      // 2. OPENROUTER (Handles all models under 1 unified key!)
+      if (keys.openrouter) {
+        const openRouterMap = {
+          claude: 'anthropic/claude-3.5-sonnet',
+          openai: 'openai/gpt-4o-mini',
+          gemini: 'google/gemini-2.0-flash-001',
+          grok: 'x-ai/grok-2-1212',
+          llama: 'meta-llama/llama-3.3-70b-instruct'
+        };
+        const targetModel = openRouterMap[decision.model] || 'openai/gpt-4o-mini';
+        return await callOpenAICompatible(
+          'https://openrouter.ai/api/v1/chat/completions',
+          keys.openrouter,
+          targetModel,
+          messages,
+          abortSignal,
+          { 'HTTP-Referer': 'https://brainrouter.co.in', 'X-Title': 'BrainRouter' }
+        );
+      }
+
+      // 3. DIRECT PROVIDER KEYS
+      if (decision.model === 'claude' && keys.anthropic) {
+        return await callAnthropicDirect(keys.anthropic, 'claude-3-5-sonnet-20241022', messages, abortSignal);
+      }
+      if (decision.model === 'openai' && keys.openai) {
+        return await callOpenAICompatible('https://api.openai.com/v1/chat/completions', keys.openai, 'gpt-4o-mini', messages, abortSignal);
+      }
+      if (decision.model === 'gemini' && keys.gemini) {
+        return await callGeminiDirect(keys.gemini, 'gemini-1.5-flash', messages, abortSignal);
+      }
+      if (decision.model === 'grok' && keys.xai) {
+        return await callOpenAICompatible('https://api.x.ai/v1/chat/completions', keys.xai, 'grok-2-latest', messages, abortSignal);
+      }
+      if (decision.model === 'llama' && keys.groq) {
+        return await callOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', keys.groq, 'llama-3.3-70b-versatile', messages, abortSignal);
+      }
+
+      // 4. INTELLIGENT FALLBACK:
+      // If the specific key is missing, route through whichever provider key the user DOES have!
+      const availableProvider = keys.groq ? 'groq'
+                              : keys.gemini ? 'gemini'
+                              : keys.openai ? 'openai'
+                              : keys.anthropic ? 'anthropic'
+                              : keys.xai ? 'xai'
+                              : null;
+
+      if (!availableProvider) {
+        // 5. FREE PUBLIC TIER (When no API keys are configured yet)
+        try {
+          const freeRes = await fetch('https://text.pollinations.ai/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: abortSignal,
+            body: JSON.stringify({
+              messages: specializedMessages,
+              model: 'openai'
+            })
+          });
+          if (freeRes.ok) {
+            const text = await freeRes.text();
+            if (text && !text.includes('Free limit reached')) {
+              return text;
+            }
+          }
+        } catch (err) {
+          console.warn('Free public tier network error:', err);
+        }
+
+        throw new Error('Free public rate limit reached. To get instant unlimited replies, configure a 100% free API key from Google AI Studio or Groq in the API Keys menu above!');
+      }
+
+      const roleInstructions = {
+        claude: 'You are Claude 3.5 Sonnet acting as the coding specialist. Write exceptionally clean, modular, production-ready code with concise, precise technical explanations.',
+        grok: 'You are Grok 2. Be witty, humorous, direct, and conversational with slight playful banter.',
+        gemini: 'You are Gemini 1.5 Flash. Provide deep, structured research-grade explanations with multi-step analytical reasoning.',
+        openai: 'You are GPT-4o mini. Provide balanced, clear, and comprehensive assistance.',
+        llama: 'You are LLaMA 3.3. Provide ultra-fast, direct, and insightful answers.'
+      };
+
+      const specializedMessages = [
+        { role: 'system', content: roleInstructions[decision.model] || 'You are an intelligent assistant.' },
+        ...messages
+      ];
+
+      if (availableProvider === 'groq') {
+        return await callOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', keys.groq, 'llama-3.3-70b-versatile', specializedMessages, abortSignal);
+      }
+      if (availableProvider === 'gemini') {
+        return await callGeminiDirect(keys.gemini, 'gemini-1.5-flash', specializedMessages, abortSignal);
+      }
+      if (availableProvider === 'openai') {
+        return await callOpenAICompatible('https://api.openai.com/v1/chat/completions', keys.openai, 'gpt-4o-mini', specializedMessages, abortSignal);
+      }
+      if (availableProvider === 'anthropic') {
+        return await callAnthropicDirect(keys.anthropic, 'claude-3-5-sonnet-20241022', specializedMessages, abortSignal);
+      }
+      if (availableProvider === 'xai') {
+        return await callOpenAICompatible('https://api.x.ai/v1/chat/completions', keys.xai, 'grok-2-latest', specializedMessages, abortSignal);
+      }
     }
 
     /* ── SEND MESSAGE ── */
@@ -1320,17 +1926,26 @@
       const text = ta.value.trim();
       if (!text || busy) return;
 
-      // hide welcome
+      const keys = getApiKeys();
+      const hasAnyKey = Object.values(keys).some(k => k && k.trim());
+      if (!hasAnyKey) {
+        showToast('Using Free Tier ⚡ (Add your free Gemini or Groq key in Settings for 10x speed!)', 3200);
+      }
+
+      // Hide welcome
       if (welcomeEl) welcomeEl.style.display = 'none';
 
-      // ── message counter ──
+      // Message counter
       msgCount++;
       localStorage.setItem('br_msg_count', msgCount);
 
-      // append user bubble
+      // Append user bubble
       appendUser(text);
-      // build OpenAI-format messages from history
-      const messages = history.map(m => ({ role: m.role === 'model' ? 'assistant' : m.role, content: m.content }));
+
+      const messages = history.map(m => ({
+        role: m.role === 'model' ? 'assistant' : m.role,
+        content: m.content
+      }));
       messages.push({ role: 'user', content: text });
       history.push({ role: 'user', content: text });
 
@@ -1338,44 +1953,38 @@
       ta.style.height = 'auto';
       setBusy(true);
 
-      // thinking indicator
-      const thinkEl = appendThinking();
+      // Thinking indicator
+      const thinkEl = appendThinking('🧠 Analyzing intent & routing...');
       scrollBottom();
 
       try {
         abortCtrl = new AbortController();
-        const res = await fetch(GROQ_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + GROQ_KEY },
-          signal: abortCtrl.signal,
-          body: JSON.stringify({
-            model: GROQ_MODEL,
-            messages: messages,
-            temperature: 0.9,
-            max_tokens: 2048
-          })
-        });
 
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          const msg = err?.error?.message || res.status;
-          throw new Error(msg);
-        }
+        // 1. Intelligent Route Decision
+        const decision = await routeQuery(text);
+        highlightRoster(decision.model);
 
-        const data = await res.json();
-        const reply = data.choices?.[0]?.message?.content || '[No response]';
+        // Update thinking text with selected route
+        const modelMeta = MODEL_META[decision.model] || { name: decision.model };
+        updateThinking(thinkEl, `⚡ Routing to ${modelMeta.name}...`);
+
+        // 2. Dispatch request to model
+        const reply = await dispatchModelRequest(decision, messages, abortCtrl.signal);
 
         thinkEl.remove();
-        appendAssistant(reply);
-        history.push({ role: 'model', content: reply });
+        clearRosterHighlight();
+
+        appendAssistant(reply, decision);
+        history.push({ role: 'model', content: reply, route: decision });
         saveHistory();
 
       } catch (e) {
         thinkEl.remove();
+        clearRosterHighlight();
         if (e.name === 'AbortError') {
           appendAssistant('_Generation stopped._');
         } else {
-          appendAssistant(`⚠️ **Error:** ${e.message}`);
+          appendAssistant(`⚠️ **BrainRouter Error:** ${e.message}`);
         }
       }
 
@@ -1383,7 +1992,7 @@
       scrollBottom();
       ta.focus();
 
-      // ── trigger auth modal at free limit (only if not logged in) ──
+      // Trigger auth modal at limit
       if (!loggedIn && msgCount >= FREE_MSG_LIMIT) {
         setTimeout(() => openAuthModal('signup', true), 800);
       }
@@ -1398,14 +2007,14 @@
       if (abortCtrl) abortCtrl.abort();
     }
 
-    /* ── DOM HELPERS ── */
-    function gemIcon() {
+    /* ── DOM MESSAGE BUILDERS ── */
+    function gemIcon(accentColor) {
+      const c = accentColor || '#c96442';
       return `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;">
-    <defs><linearGradient id="mg2" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72f7"/><stop offset="1" stop-color="#f5792b"/>
-    </linearGradient></defs>
-    <path d="M14 2C14 8.627 8.627 14 2 14C8.627 14 14 19.373 14 26C14 19.373 19.373 14 26 14C19.373 14 14 8.627 14 2Z" fill="url(#mg2)"/>
-  </svg>`;
+        <rect width="28" height="28" rx="7" fill="${c}"/>
+        <path d="M14 8.5 C12.5 8.5 11.2 9.3 10.5 10.6 C9.7 10.1 8.4 10.4 7.8 11.5 C7.2 12.5 7.6 13.8 8.6 14.5 C8.1 15.4 8.3 16.7 9.5 17.4 C10.3 17.9 11.5 18 12.8 18 L14 18 L14 8.5 Z" fill="white"/>
+        <path d="M14 8.5 C15.5 8.5 16.8 9.3 17.5 10.6 C18.3 10.1 19.6 10.4 20.2 11.5 C20.8 12.5 20.4 13.8 19.4 14.5 C19.9 15.4 19.7 16.7 18.5 17.4 C17.7 17.9 16.5 18 15.2 18 L14 18 L14 8.5 Z" fill="white"/>
+      </svg>`;
     }
 
     function appendUser(text) {
@@ -1415,22 +2024,51 @@
       msgsInner.appendChild(row);
     }
 
-    function appendThinking() {
+    function appendThinking(initialText = 'Thinking...') {
       const row = document.createElement('div');
       row.className = 'msg-row assistant';
       row.innerHTML = `
-    <div class="msg-avatar gem-avatar">${gemIcon()}</div>
-    <div class="msg-content"><div class="thinking"><span></span><span></span><span></span></div></div>`;
+        <div class="msg-avatar gem-avatar">${gemIcon()}</div>
+        <div class="msg-content">
+          <div class="thinking-status">${initialText}</div>
+          <div class="thinking"><span></span><span></span><span></span></div>
+        </div>`;
       msgsInner.appendChild(row);
       return row;
     }
 
-    function appendAssistant(text) {
+    function updateThinking(thinkEl, text) {
+      if (!thinkEl) return;
+      const statusEl = thinkEl.querySelector('.thinking-status');
+      if (statusEl) statusEl.textContent = text;
+    }
+
+    function appendAssistant(text, routeDecision) {
       const row = document.createElement('div');
       row.className = 'msg-row assistant';
+
+      let routeBadgeHtml = '';
+      let modelColor = '#c96442';
+
+      if (routeDecision && routeDecision.model) {
+        const meta = MODEL_META[routeDecision.model] || { name: routeDecision.model, color: '#c96442' };
+        modelColor = meta.color;
+        routeBadgeHtml = `
+          <div class="route-badge">
+            <span class="route-badge-dot" style="background:${meta.color};"></span>
+            <span class="route-badge-model">${meta.name}</span>
+            <span class="route-badge-sep">•</span>
+            <span class="route-badge-reason">${escapeHtml(routeDecision.reason || 'Optimal route')}</span>
+          </div>
+        `;
+      }
+
       row.innerHTML = `
-    <div class="msg-avatar gem-avatar">${gemIcon()}</div>
-    <div class="msg-content">${renderMarkdown(text)}</div>`;
+        <div class="msg-avatar gem-avatar">${gemIcon(modelColor)}</div>
+        <div class="msg-content">
+          ${routeBadgeHtml}
+          <div class="msg-body">${renderMarkdown(text)}</div>
+        </div>`;
       msgsInner.appendChild(row);
       scrollBottom();
     }
@@ -1445,27 +2083,38 @@
     function newChat() {
       history = [];
       msgsInner.innerHTML = '';
+      clearRosterHighlight();
       const w = document.createElement('div');
       w.className = 'welcome';
       w.id = 'welcome';
       w.innerHTML = `
-    <svg class="welcome-gem" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="64" height="64" rx="18" fill="#c96442"/>
-      <path d="M32 10C32 22.15 22.15 32 10 32C22.15 32 32 41.85 32 54C32 41.85 41.85 32 54 32C41.85 32 32 22.15 32 10Z" fill="#fff"/>
-    </svg>
-    <h1>Good to see you.</h1>
-    <p>Ask BrainRouter anything — it thinks fast and answers clearly.</p>
-    <div class="suggestion-grid">
-      <button class="suggestion-card" onclick="sendSuggestion(this)">Explain quantum computing in simple terms</button>
-      <button class="suggestion-card" onclick="sendSuggestion(this)">Write a Python script to sort a list</button>
-      <button class="suggestion-card" onclick="sendSuggestion(this)">What are the best productivity tips?</button>
-      <button class="suggestion-card" onclick="sendSuggestion(this)">Create a creative short story opening</button>
-    </div>`;
+        <svg class="welcome-gem" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="64" height="64" rx="16" fill="#c96442"/>
+          <path d="M32 19 C28.5 19 25.6 21.1 24.2 24.2 C22.4 23.1 19.4 23.8 18 26.4 C16.7 28.8 17.6 31.8 19.8 33.3 C18.6 35.4 19 38.3 21.6 39.8 C23.4 40.9 26.2 41.2 29 41.2 L32 41.2 L32 19 Z" fill="white"/>
+          <path d="M32 19 C35.5 19 38.4 21.1 39.8 24.2 C41.6 23.1 44.6 23.8 46 26.4 C47.3 28.8 46.4 31.8 44.2 33.3 C45.4 35.4 45 38.3 42.4 39.8 C40.6 40.9 37.8 41.2 35 41.2 L32 41.2 L32 19 Z" fill="white"/>
+          <line x1="32" y1="21" x2="32" y2="40" stroke="#c96442" stroke-width="2" stroke-linecap="round" stroke-dasharray="3.5 2.5"/>
+          <line x1="32" y1="19" x2="32" y2="9" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+          <rect x="26.8" y="6.2" width="10.4" height="3.8" rx="1.9" fill="white"/>
+          <polyline points="18,30 8,30 8,23" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <rect x="5.3" y="21" width="3.8" height="9.2" rx="1.9" fill="white"/>
+          <polyline points="46,30 56,30 56,23" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <rect x="54.9" y="21" width="3.8" height="9.2" rx="1.9" fill="white"/>
+          <line x1="32" y1="41.2" x2="32" y2="55" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+          <rect x="26.8" y="54" width="10.4" height="3.8" rx="1.9" fill="white"/>
+        </svg>
+        <h1>Good to see you.</h1>
+        <p>Ask BrainRouter anything — it detects intent and switches models automatically.</p>
+        <div class="suggestion-grid">
+          <button class="suggestion-card" onclick="sendSuggestion(this)">Explain quantum computing in simple terms</button>
+          <button class="suggestion-card" onclick="sendSuggestion(this)">Write a Python script to sort a list</button>
+          <button class="suggestion-card" onclick="sendSuggestion(this)">Tell me a funny joke about programming</button>
+          <button class="suggestion-card" onclick="sendSuggestion(this)">Generate an image of a futuristic cyberpunk city</button>
+        </div>`;
       msgsInner.appendChild(w);
       ta.focus();
     }
 
-    /* ── HISTORY (sidebar) ── */
+    /* ── HISTORY PERSISTENCE ── */
     let savedChats = JSON.parse(localStorage.getItem('gem_chats') || '[]');
 
     function saveHistory() {
@@ -1475,20 +2124,6 @@
       savedChats.unshift({ id, title, history: [...history] });
       savedChats = savedChats.slice(0, 20);
       localStorage.setItem('gem_chats', JSON.stringify(savedChats));
-      renderHistoryList();
-    }
-
-    function renderHistoryList() {
-      const list = document.getElementById('history-list');
-      if (!list) return; // history-list replaced by Model Roster
-      list.innerHTML = '';
-      savedChats.slice(0, 8).forEach(c => {
-        const el = document.createElement('div');
-        el.className = 'chat-item';
-        el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>${c.title}`;
-        el.onclick = () => loadChat(c);
-        list.appendChild(el);
-      });
     }
 
     function loadChat(c) {
@@ -1497,12 +2132,21 @@
       msgsInner.innerHTML = '';
       history.forEach(m => {
         if (m.role === 'user') appendUser(m.content);
-        else appendAssistant(m.content);
+        else appendAssistant(m.content, m.route);
       });
       scrollBottom();
     }
 
-    renderHistoryList();
+    // Auto-prompt to configure API keys on first load if none set
+    window.addEventListener('DOMContentLoaded', () => {
+      const keys = getApiKeys();
+      const hasAny = Object.values(keys).some(k => k && k.trim());
+      if (!hasAny) {
+        setTimeout(() => {
+          showToast('Welcome! Configure your API keys to enable model routing ⚙️', 4000);
+        }, 1000);
+      }
+    });
   </script>
 </body>
 
