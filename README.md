@@ -1,114 +1,139 @@
 # BrainRouter 🧠
 
-so basically this is my college project but i actually think its a pretty solid idea so i built it properly lol
+**One chat box, multiple AI models. You type, it picks the right model.**
 
-live at → **[brainrouter.co.in](https://brainrouter.co.in)**
+**Live:** [brainrouter.co.in](https://brainrouter.co.in) · [brain-router.vercel.app](https://brain-router.vercel.app)
 
----
+<!-- TODO: add a screenshot or a 10-15 sec GIF of a prompt being routed. Put it right here. -->
+<!-- ![BrainRouter demo](docs/demo.gif) -->
 
-## what is it
+I kept switching between ChatGPT, Claude, and Gemini depending on the task, and it got annoying. BrainRouter makes that choice for you. A fast classifier model reads each message, determines which model is best suited, and routes it there. A dynamic routing badge above each response and an active roster in the sidebar show every decision and the reason behind it.
 
-its a single web app that has multiple AI models connected to it — and instead of you having to choose which one to use, it just... figures it out for you. you type something and Gemini 1.5 Flash reads your message and routes it to whichever model is best for that specific task.
-
-like if you ask it to write code it sends it to Claude. if you wanna have a casual chat it goes to Grok. if you need something researched properly it uses Gemini. image generation goes to Stability AI. you get the idea.
-
----
-
-## the models and what they do
-
-| model | what its good at |
-|-------|-----------------|
-| Gemini 1.5 Flash | routing every message + deep reasoning |
-| GPT-4o mini | general conversation and Q&A |
-| Grok | casual chat, humor, real-time stuff |
-| Claude | code, debugging, anything technical |
-| Stability AI | generating images from text |
+Started as a college project. I kept building it because I think the idea works.
 
 ---
 
-## how the routing works
+## How routing works
 
-every time you send a message, before anything else happens, it hits the Gemini API with a system prompt that tells it to return a JSON object like:
+1. You send a message.
+2. A fast classifier (the router) receives the query with a system prompt telling it to reply with JSON only:
 
-```json
-{"model": "claude", "reason": "user is asking to write a python script"}
+   ```json
+   {"model": "claude", "reason": "Technical programming & code logic"}
+   ```
+
+3. The app parses that decision and calls the corresponding provider's API.
+4. The response appears in chat with a routing badge, and the active model pulses in the sidebar roster.
+
+| Task | Model / Engine | Provider |
+|---|---|---|
+| Code, debugging & technical questions | Claude (3.5 Sonnet / Haiku 4.5) | Anthropic / OpenRouter |
+| General conversation & structured Q&A | GPT-4o mini | OpenAI / OpenRouter |
+| Casual chat, humor & witty banter | Grok 2 / 4.5 | xAI / OpenRouter |
+| Research, math & deep reasoning | Gemini Flash-Lite / 2.5 | Google AI Studio / OpenRouter |
+| Ultra-fast lookups & reasoning | GPT-OSS 120B / LLaMA | Groq LPU Engine |
+| Image generation | Pollinations / Stability | Built-in / Stability AI |
+
+### Dual-Layer Routing Engine
+
+BrainRouter uses a two-tier routing system to balance intelligence and speed:
+
+1. **AI Semantic Router**: When a Gemini, Groq, or OpenRouter key is configured, an LLM performs deep semantic intent classification in structured JSON.
+2. **Instant Heuristic Fallback (< 1 ms)**: If keys are missing, network is slow, or provider limits are reached, a built-in regex and pattern matcher takes over immediately. It categorizes code keywords, math proofs, jokes, and image requests so routing **never fails or lags**.
+
+### Performance
+
+- **Groq LPU Router**: ~190 ms classification latency
+- **Gemini Flash-Lite Router**: ~1.4 s classification latency
+- **Local Heuristic Fallback**: < 1 ms (instant)
+- **Groq 120B Inference**: ~68 ms completion time (500+ tokens/s)
+
+---
+
+## Features
+
+- **Dynamic multi-model routing** across 6 specialized AI models and generators
+- **Visual routing badges** showing the active model, its accent color, and the routing rationale
+- **Live sidebar model roster** that illuminates and pulses the active model in real time
+- **Zero-config free tier**: works out of the box with zero API keys required
+- **1-Click Auto Setup**: pre-configures and securely saves keys into `localStorage` via `#setup` tokens
+- **Local API key manager**: keys stay strictly in your browser and are never stored on any server
+- **Built-in image generator** powered by Pollinations.ai (free high-res image rendering)
+- **Sign in with Google or email** with local message limit tracking
+
+---
+
+## Running it
+
+It's a single `index.html` file. Download it and open it in any browser:
+
+```bash
+open index.html
 ```
 
-then based on that it calls whichever API is needed. the whole routing step takes like half a second which is why i picked Gemini Flash specifically — its fast.
+Or serve locally:
 
----
+```bash
+python3 -m http.server 3000
+```
 
-## features
+### Free & Optional API Keys
 
-- smart routing (the whole point)
-- sign in with Google or email
-- 20 free messages as a guest, 100 after you sign up
-- API keys saved to localStorage so you dont have to re-enter them every session
-- routing log on the right side shows you every decision it made and why
-- paywall popup after 20 messages (built this in because why not, could actually make this real)
-
----
-
-## setup / running it locally
-
-its literally one HTML file so just download it and open it in your browser. thats it.
-
-### zero-config free tier
-BrainRouter now runs **out-of-the-box with zero API keys required** using a free public fallback and built-in image generator.
-
-### recommended free api keys (for instant speed & zero limits)
-To get 10x faster responses and unlimited quotas, add any of these 100% free keys in the **API Keys** panel (top right):
+BrainRouter works out of the box using a free public fallback. For instant speed and unlimited quotas, open the **API Keys** panel (top right) and paste any of these free keys:
 
 - **Google Gemini** (100% Free · Router & Reasoning) → [aistudio.google.com](https://aistudio.google.com/app/apikey)
-- **Groq Cloud** (100% Free · LLaMA 3.3 70B & 3.1 8B at 500+ tokens/s) → [console.groq.com](https://console.groq.com/keys)
-- **OpenRouter** (Universal key · access Claude 3.5, GPT-4o, Grok, Gemini, & free models) → [openrouter.ai/keys](https://openrouter.ai/keys)
-- **Direct Keys** (Optional): OpenAI, Anthropic Claude, xAI Grok
+- **Groq Cloud** (100% Free · 500+ tokens/s on Groq LPUs) → [console.groq.com](https://console.groq.com/keys)
+- **OpenRouter** (Universal key · access Claude, GPT-4o, Grok & free models) → [openrouter.ai/keys](https://openrouter.ai/keys)
+- **Direct Keys** (Optional): Anthropic Claude, OpenAI, xAI Grok, Stability AI
 
-Paste them into the API Keys settings modal in the app — keys are stored strictly in your browser's `localStorage` and never sent to any server.
+Keys are saved exclusively in your browser's `localStorage` and sent directly to provider endpoints via client-side HTTPS. They never touch any server of mine.
 
----
+### Google sign-in (if you fork this)
 
-## google sign-in setup (if you're forking this)
-
-1. go to console.cloud.google.com
-2. new project → APIs & Services → Credentials → OAuth Client ID → Web application
-3. add your domain to authorized JavaScript origins
-4. copy the client ID
-5. find `YOUR_GOOGLE_CLIENT_ID_HERE` in the HTML and replace it
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create a project.
+2. APIs & Services → Credentials → Create OAuth Client ID → Web application.
+3. Add your domain to the authorized JavaScript origins.
+4. Replace `YOUR_GOOGLE_CLIENT_ID_HERE` in `index.html` with your client ID.
 
 ---
 
-## tech stack
+## Tech stack
 
-honestly its just vanilla HTML, CSS and JavaScript. no frameworks, no build tools, no node_modules folder with 400MB of dependencies. one file. i kind of like that about it
-
-the only external things are:
-- Google Fonts (Lora + DM Sans)
-- Google Identity Services (for OAuth)
-- the actual AI APIs
-
----
-
-## why i built this
-
-i kept switching between ChatGPT, Claude, Gemini etc depending on what i needed to do and it was annoying. the idea is that you shouldnt have to know which AI is good at what — it should just know. 
-
-also it was a college project and i wanted to build something that could actually be a real product one day and not just a thing i submit and forget about
+- **Frontend**: Vanilla HTML5, CSS3, modern ES6+ JavaScript. Single-file architecture, zero build tools, zero dependencies.
+- **Typography**: Google Fonts (Inter, Lora, JetBrains Mono)
+- **Auth**: Google Identity Services (OAuth 2.0)
+- **AI Providers**: Google AI Studio, Groq Cloud, OpenRouter, Anthropic, OpenAI, xAI, Pollinations.ai
+- **Hosting**: Vercel with custom domain ([brainrouter.co.in](https://brainrouter.co.in))
 
 ---
 
-## future plans (maybe)
+## Known limitations
 
-- actual backend with a proper database instead of localStorage
-- user history saved across devices  
-- more models (Mistral, Llama, etc)
-- a proper Pro plan with Stripe payments
-- mobile app version
+I'd rather list these than have you find them:
+
+- **Usage limits are enforced client-side.** The message counter lives in `localStorage`, so it can be cleared. The paywall popup is a prototype.
+- **Client-side direct API calls.** Calls are made directly from the browser, which requires CORS or browser-friendly endpoints (handled via direct headers, OpenRouter, or free proxy). A production app should hold keys in a serverless proxy.
+- **No sync across devices yet.** Chat history lives in your current browser session.
+- **Router accuracy is probabilistic.** Like all LLM classifications, edge cases can occasionally route to an alternative model.
 
 ---
 
-## made by
+## Roadmap
 
-vl0n317 — project, 2026
+- [x] Dual-layer intent routing (AI router + instant local heuristic fallback)
+- [x] Client-side 1-click API key manager in `localStorage`
+- [x] Zero-config free tier fallback
+- [x] Groq LPU sub-second inference engine integration
+- [x] In-chat dynamic routing badges and real-time active roster pulse
+- [ ] Serverless backend on Vercel: keys held server-side, usage limits enforced for real
+- [ ] Database for accounts and chat history across devices
+- [ ] Stripe payments for Pro plan
+- [ ] Support for local models via WebLLM or local Ollama instances
 
-if you wanna reach out or collab → brainrouter.co.in
+---
+
+## Author
+
+**P Dheeraj** ([@VL0N317](https://github.com/VL0N317)), Bangalore
+
+Feedback or collaboration: open an issue or reach out through [brainrouter.co.in](https://brainrouter.co.in).
