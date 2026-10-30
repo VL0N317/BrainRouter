@@ -1300,8 +1300,8 @@
     <div class="model-item" id="roster-llama">
       <div class="model-dot" style="background:#c96442"></div>
       <div class="model-info">
-        <div class="model-name">LLaMA 3.3 70B</div>
-        <div class="model-sub">Ultra-Fast Groq Engine</div>
+        <div class="model-name">Groq LPU Engine</div>
+        <div class="model-sub">Ultra-Fast 120B Reasoning</div>
       </div>
     </div>
     <div class="model-item" id="roster-image">
@@ -1397,9 +1397,9 @@
     const MODEL_META = {
       claude: { name: 'Claude 3.5 Sonnet', color: '#d97706', label: 'Code & Logic' },
       openai: { name: 'GPT-4o mini', color: '#10b981', label: 'General Knowledge' },
-      gemini: { name: 'Gemini 1.5 Flash', color: '#4285f4', label: 'Deep Reasoning' },
+      gemini: { name: 'Gemini Flash', color: '#4285f4', label: 'Deep Reasoning' },
       grok: { name: 'Grok 2', color: '#1a1714', label: 'Witty & Casual' },
-      llama: { name: 'LLaMA 3.3 70B', color: '#c96442', label: 'Ultra-Fast' },
+      llama: { name: 'Groq LPU Engine', color: '#c96442', label: 'Ultra-Fast 120B' },
       image: { name: 'Image Generator', color: '#8b5cf6', label: 'Creative Image' }
     };
 
@@ -1673,7 +1673,7 @@ Respond with ONLY valid JSON:
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${keys.groq.trim()}` },
             body: JSON.stringify({
-              model: 'llama-3.1-8b-instant',
+              model: 'openai/gpt-oss-20b',
               messages: [
                 { role: 'system', content: routingSystemPrompt },
                 { role: 'user', content: prompt }
@@ -1854,7 +1854,7 @@ Respond with ONLY valid JSON:
         return await callOpenAICompatible('https://api.x.ai/v1/chat/completions', keys.xai, 'grok-2-latest', messages, abortSignal);
       }
       if (decision.model === 'llama' && keys.groq) {
-        return await callOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', keys.groq, 'llama-3.3-70b-versatile', messages, abortSignal);
+        return await callOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', keys.groq, 'openai/gpt-oss-120b', messages, abortSignal);
       }
 
       // 4. INTELLIGENT FALLBACK:
@@ -1905,7 +1905,7 @@ Respond with ONLY valid JSON:
       ];
 
       if (availableProvider === 'groq') {
-        return await callOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', keys.groq, 'llama-3.3-70b-versatile', specializedMessages, abortSignal);
+        return await callOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', keys.groq, 'openai/gpt-oss-120b', specializedMessages, abortSignal);
       }
       if (availableProvider === 'gemini') {
         return await callGeminiDirect(keys.gemini, 'gemini-flash-lite-latest', specializedMessages, abortSignal);
