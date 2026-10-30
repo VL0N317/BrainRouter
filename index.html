@@ -1647,7 +1647,7 @@ Respond with ONLY valid JSON:
       // 1. Try Gemini Router if key present
       if (keys.gemini) {
         try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${keys.gemini.trim()}`, {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${keys.gemini.trim()}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1848,7 +1848,7 @@ Respond with ONLY valid JSON:
         return await callOpenAICompatible('https://api.openai.com/v1/chat/completions', keys.openai, 'gpt-4o-mini', messages, abortSignal);
       }
       if (decision.model === 'gemini' && keys.gemini) {
-        return await callGeminiDirect(keys.gemini, 'gemini-1.5-flash', messages, abortSignal);
+        return await callGeminiDirect(keys.gemini, 'gemini-flash-lite-latest', messages, abortSignal);
       }
       if (decision.model === 'grok' && keys.xai) {
         return await callOpenAICompatible('https://api.x.ai/v1/chat/completions', keys.xai, 'grok-2-latest', messages, abortSignal);
@@ -1908,7 +1908,7 @@ Respond with ONLY valid JSON:
         return await callOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', keys.groq, 'llama-3.3-70b-versatile', specializedMessages, abortSignal);
       }
       if (availableProvider === 'gemini') {
-        return await callGeminiDirect(keys.gemini, 'gemini-1.5-flash', specializedMessages, abortSignal);
+        return await callGeminiDirect(keys.gemini, 'gemini-flash-lite-latest', specializedMessages, abortSignal);
       }
       if (availableProvider === 'openai') {
         return await callOpenAICompatible('https://api.openai.com/v1/chat/completions', keys.openai, 'gpt-4o-mini', specializedMessages, abortSignal);
