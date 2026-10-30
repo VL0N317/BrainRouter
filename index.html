@@ -1692,7 +1692,39 @@ Respond with ONLY valid JSON:
         }
       }
 
-      // 3. Fallback to intelligent heuristic classifier
+      // 3. Try OpenRouter Router if key present
+      if (keys.openrouter) {
+        try {
+          const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${keys.openrouter.trim()}`,
+              'HTTP-Referer': 'https://brainrouter.co.in',
+              'X-Title': 'BrainRouter'
+            },
+            body: JSON.stringify({
+              model: 'openai/gpt-4o-mini',
+              messages: [
+                { role: 'system', content: routingSystemPrompt },
+                { role: 'user', content: prompt }
+              ],
+              temperature: 0.1,
+              max_tokens: 150,
+              response_format: { type: "json_object" }
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const parsed = JSON.parse(data.choices?.[0]?.message?.content || '{}');
+            if (parsed.model && MODEL_META[parsed.model]) return parsed;
+          }
+        } catch (e) {
+          console.warn('OpenRouter router failed, falling back to heuristic:', e);
+        }
+      }
+
+      // 4. Fallback to intelligent heuristic classifier
       return heuristicClassifier(prompt);
     }
 
@@ -1710,7 +1742,7 @@ Respond with ONLY valid JSON:
           model: model,
           messages: messages,
           temperature: 0.7,
-          max_tokens: 3000
+          max_tokens: 1500
         })
       });
 
@@ -1823,11 +1855,11 @@ Respond with ONLY valid JSON:
       // 2. OPENROUTER (Handles all models under 1 unified key!)
       if (keys.openrouter) {
         const openRouterMap = {
-          claude: 'anthropic/claude-3.5-sonnet',
+          claude: 'anthropic/claude-haiku-4.5',
           openai: 'openai/gpt-4o-mini',
-          gemini: 'google/gemini-2.0-flash-001',
-          grok: 'x-ai/grok-2-1212',
-          llama: 'meta-llama/llama-3.3-70b-instruct'
+          gemini: 'google/gemini-3.5-flash-lite',
+          grok: 'x-ai/grok-4.5',
+          llama: 'google/gemma-4-31b-it:free'
         };
         const targetModel = openRouterMap[decision.model] || 'openai/gpt-4o-mini';
         return await callOpenAICompatible(
