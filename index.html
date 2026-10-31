@@ -110,35 +110,107 @@
     }
 
     .sidebar-section {
-      padding: 8px 16px 4px;
+      padding: 8px 12px 4px;
       font-size: 10px;
       color: var(--muted);
       font-weight: 600;
       letter-spacing: 1px;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      max-height: 220px;
+      overflow-y: auto;
+      margin-bottom: 6px;
+      padding-right: 2px;
+    }
+
+    .chat-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .chat-list::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
     }
 
     .chat-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
       border-radius: var(--radius);
       cursor: pointer;
-      transition: background .15s;
+      transition: all .15s;
       font-size: 13px;
       color: var(--muted);
+      user-select: none;
     }
 
     .chat-item:hover {
       background: var(--surface2);
-      color: var(--text)
+      color: var(--text);
     }
 
-    .chat-item svg {
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0
+    .chat-item.active {
+      background: var(--surface2);
+      color: var(--accent);
+      font-weight: 500;
+      box-shadow: inset 2px 0 0 var(--accent);
+    }
+
+    .chat-item-title {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12.5px;
+    }
+
+    .chat-item-del {
+      opacity: 0;
+      transition: opacity .15s;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 3px 5px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-item:hover .chat-item-del {
+      opacity: 1;
+    }
+
+    .chat-item-del:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, .12);
+    }
+
+    .chat-count-badge {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: var(--surface2);
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .chat-empty {
+      padding: 12px 10px;
+      font-size: 11.5px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
     }
 
     .sidebar-bottom {
@@ -151,14 +223,15 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 16px;
+      padding: 10px 12px;
       border-radius: var(--radius);
       cursor: pointer;
-      transition: background .15s
+      transition: background .15s;
+      position: relative;
     }
 
     .user-row:hover {
-      background: var(--surface2)
+      background: var(--surface2);
     }
 
     .avatar {
@@ -172,7 +245,33 @@
       font-size: 13px;
       font-weight: 700;
       color: #fff;
-      flex-shrink: 0
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sidebar-logout-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      margin-left: auto;
+    }
+
+    .sidebar-logout-btn:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, .1);
     }
 
     .user-info {
@@ -732,6 +831,123 @@
       transform: scale(1.02);
     }
 
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 6px;
+      border-radius: 24px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .user-badge:hover {
+      border-color: var(--accent);
+    }
+
+    .user-badge-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      overflow: hidden;
+    }
+
+    .user-badge-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-badge-name {
+      max-width: 130px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-badge-signout {
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      transition: color .15s;
+    }
+
+    .user-badge-signout:hover {
+      color: #ef4444;
+    }
+
+    .settings-nav {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+      padding-bottom: 2px;
+    }
+
+    .settings-tab {
+      background: none;
+      border: none;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -3px;
+      transition: all .15s;
+    }
+
+    .settings-tab:hover {
+      color: var(--text);
+    }
+
+    .settings-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .fb-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+
+    .fb-status-pill.connected {
+      background: rgba(16, 185, 129, .12);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, .25);
+    }
+
+    .fb-status-pill.disconnected {
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
     /* ── ROUTE BADGE & MODEL ROSTER ACTIVE ── */
     .route-badge {
       display: inline-flex;
@@ -1047,20 +1263,22 @@
   <!-- TOP RIGHT HEADER BAR -->
   <div class="topbar">
     <div class="topbar-actions">
-      <button class="settings-btn" id="settings-btn" onclick="openSettingsModal()" title="Configure API Keys & Model Router">
+      <button class="settings-btn" id="settings-btn" onclick="openSettingsModal()" title="Configure API Keys & Firebase Cloud Sync">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
         </svg>
-        API Keys
+        Settings & Keys
       </button>
-      <button class="sign-in-btn" id="sign-in-btn" onclick="openAuthModal('login')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-        Sign in
-      </button>
+      <div id="topbar-user-section">
+        <button class="sign-in-btn" id="sign-in-btn" onclick="openAuthModal('login')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          Sign in
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1149,7 +1367,7 @@
 
   <!-- SETTINGS MODAL -->
   <div class="modal-overlay" id="settings-overlay" onclick="settingsOverlayClick(event)">
-    <div class="auth-modal" id="settings-modal" style="width: 480px;">
+    <div class="auth-modal" id="settings-modal" style="width: 500px;">
       <button class="auth-close" onclick="closeSettingsModal()">✕</button>
 
       <div class="auth-logo">
@@ -1167,67 +1385,124 @@
           <line x1="14" y1="18" x2="14" y2="24" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
           <rect x="11.8" y="23.6" width="4.4" height="1.6" rx="0.8" fill="white"/>
         </svg>
-        <span>Model Router Settings</span>
+        <span>Settings & Backend Sync</span>
       </div>
 
-      <div class="auth-headline">Configure API Keys</div>
-      <div class="auth-sub">BrainRouter dynamically routes requests across these providers. Configure one or all — keys are stored safely in your browser's local storage.</div>
+      <div class="settings-nav">
+        <button class="settings-tab active" id="tab-cfg-keys" onclick="switchSettingsTab('keys')">🤖 AI Provider Keys</button>
+        <button class="settings-tab" id="tab-cfg-firebase" onclick="switchSettingsTab('firebase')">🔥 Firebase Cloud Sync</button>
+      </div>
 
-      <div class="auth-fg">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <label class="auth-label" style="margin:0;">OpenRouter Key <span style="color:var(--accent);font-weight:600;">(Single Key for All Models)</span></label>
-          <a href="https://openrouter.ai/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+      <!-- PANEL 1: AI KEYS -->
+      <div id="panel-cfg-keys">
+        <div class="auth-headline">Configure AI Model Keys</div>
+        <div class="auth-sub">BrainRouter dynamically routes requests across these providers. Configure one or all — keys are stored safely in your browser's local storage.</div>
+
+        <div class="auth-fg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <label class="auth-label" style="margin:0;">OpenRouter Key <span style="color:var(--accent);font-weight:600;">(Single Key for All Models)</span></label>
+            <a href="https://openrouter.ai/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+          </div>
+          <input class="auth-input" id="key-openrouter" type="password" placeholder="sk-or-v1-..." />
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">Connects Claude 3.5, GPT-4o, Grok 2, Gemini & LLaMA 3.3 under one key.</div>
         </div>
-        <input class="auth-input" id="key-openrouter" type="password" placeholder="sk-or-v1-..." />
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Connects Claude 3.5, GPT-4o, Grok 2, Gemini & LLaMA 3.3 under one key.</div>
-      </div>
 
-      <div class="auth-fg">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <label class="auth-label" style="margin:0;">Google Gemini API Key <span style="color:#4285f4;font-weight:600;">(Router & Reasoning)</span></label>
-          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Free Key ↗</a>
+        <div class="auth-fg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <label class="auth-label" style="margin:0;">Google Gemini API Key <span style="color:#4285f4;font-weight:600;">(Router & Reasoning)</span></label>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Free Key ↗</a>
+          </div>
+          <input class="auth-input" id="key-gemini" type="password" placeholder="AIzaSy..." />
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">Powers fast intent classification & deep analysis.</div>
         </div>
-        <input class="auth-input" id="key-gemini" type="password" placeholder="AIzaSy..." />
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Powers fast intent classification & deep analysis.</div>
-      </div>
 
-      <div class="auth-fg">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <label class="auth-label" style="margin:0;">Groq API Key <span style="color:#c96442;font-weight:600;">(Ultra-Fast LLaMA)</span></label>
-          <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Free Key ↗</a>
+        <div class="auth-fg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <label class="auth-label" style="margin:0;">Groq API Key <span style="color:#c96442;font-weight:600;">(Ultra-Fast LLaMA)</span></label>
+            <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Free Key ↗</a>
+          </div>
+          <input class="auth-input" id="key-groq" type="password" placeholder="gsk_..." />
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">Sub-second inference via LLaMA 3.3 70B & 3.1 8B.</div>
         </div>
-        <input class="auth-input" id="key-groq" type="password" placeholder="gsk_..." />
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Sub-second inference via LLaMA 3.3 70B & 3.1 8B.</div>
-      </div>
 
-      <div class="auth-fg">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <label class="auth-label" style="margin:0;">Anthropic Claude API Key</label>
-          <a href="https://console.anthropic.com/settings/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+        <div class="auth-fg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <label class="auth-label" style="margin:0;">Anthropic Claude API Key</label>
+            <a href="https://console.anthropic.com/settings/keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+          </div>
+          <input class="auth-input" id="key-anthropic" type="password" placeholder="sk-ant-..." />
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to Claude 3.5 Sonnet for programming & code logic.</div>
         </div>
-        <input class="auth-input" id="key-anthropic" type="password" placeholder="sk-ant-..." />
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to Claude 3.5 Sonnet for programming & code logic.</div>
-      </div>
 
-      <div class="auth-fg">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <label class="auth-label" style="margin:0;">OpenAI API Key</label>
-          <a href="https://platform.openai.com/api-keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+        <div class="auth-fg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <label class="auth-label" style="margin:0;">OpenAI API Key</label>
+            <a href="https://platform.openai.com/api-keys" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+          </div>
+          <input class="auth-input" id="key-openai" type="password" placeholder="sk-proj-..." />
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to GPT-4o & GPT-4o mini.</div>
         </div>
-        <input class="auth-input" id="key-openai" type="password" placeholder="sk-proj-..." />
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to GPT-4o & GPT-4o mini.</div>
-      </div>
 
-      <div class="auth-fg">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <label class="auth-label" style="margin:0;">xAI (Grok) API Key</label>
-          <a href="https://console.x.ai" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+        <div class="auth-fg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <label class="auth-label" style="margin:0;">xAI (Grok) API Key</label>
+            <a href="https://console.x.ai" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Get Key ↗</a>
+          </div>
+          <input class="auth-input" id="key-xai" type="password" placeholder="xai-..." />
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to Grok 2 for witty and real-time chat.</div>
         </div>
-        <input class="auth-input" id="key-xai" type="password" placeholder="xai-..." />
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Direct access to Grok 2 for witty and real-time chat.</div>
+
+        <button class="auth-submit" onclick="saveSettings()">Save AI Keys</button>
       </div>
 
-      <button class="auth-submit" onclick="saveSettings()">Save Configuration</button>
+      <!-- PANEL 2: FIREBASE SYNC -->
+      <div id="panel-cfg-firebase" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="auth-headline">Firebase Cloud Backend</div>
+            <div class="auth-sub">Enables real Google Sign-In, Email auth, and syncs all your chat history across devices via Cloud Firestore.</div>
+          </div>
+        </div>
+
+        <div class="fb-status-pill disconnected" id="fb-status-pill">
+          <span style="width:7px;height:7px;border-radius:50%;background:currentColor;"></span>
+          <span id="fb-status-text">Checking Firebase status...</span>
+        </div>
+
+        <div class="auth-fg">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <label class="auth-label" style="margin:0;">Quick Import: Paste Firebase Config Object</label>
+            <a href="https://console.firebase.google.com" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Firebase Console ↗</a>
+          </div>
+          <textarea class="auth-input" id="fb-paste-area" rows="3" style="font-family:'JetBrains Mono',monospace;font-size:11px;" placeholder='Paste { apiKey: "...", authDomain: "...", projectId: "..." } here to auto-fill' oninput="handleFirebaseConfigPaste()"></textarea>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">Copy the config from Firebase Console → Project Settings → General → Web Apps.</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="auth-fg">
+            <label class="auth-label">API Key</label>
+            <input class="auth-input" id="fb-apiKey" placeholder="AIzaSy..." />
+          </div>
+          <div class="auth-fg">
+            <label class="auth-label">Project ID</label>
+            <input class="auth-input" id="fb-projectId" placeholder="my-app" />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="auth-fg">
+            <label class="auth-label">Auth Domain</label>
+            <input class="auth-input" id="fb-authDomain" placeholder="my-app.firebaseapp.com" />
+          </div>
+          <div class="auth-fg">
+            <label class="auth-label">App ID</label>
+            <input class="auth-input" id="fb-appId" placeholder="1:12345:web:..." />
+          </div>
+        </div>
+
+        <button class="auth-submit" onclick="saveFirebaseConfig()">Save & Connect Firebase</button>
+        <button class="auth-submit" style="margin-top:8px;background:none;border:1px solid var(--border);color:var(--muted);" onclick="disconnectFirebase()">Clear / Disconnect Firebase</button>
+      </div>
     </div>
   </div>
 
@@ -1267,6 +1542,14 @@
       </svg>
       New chat
     </button>
+
+    <div class="sidebar-section">
+      <span>Recent Chats</span>
+      <span class="chat-count-badge" id="chat-count-badge">0</span>
+    </div>
+    <div class="chat-list" id="chat-list">
+      <div class="chat-empty">No saved chats yet.<br>Start a conversation!</div>
+    </div>
 
     <div class="sidebar-section">Model Router</div>
     <div class="model-item" id="roster-claude">
@@ -1313,12 +1596,19 @@
     </div>
 
     <div class="sidebar-bottom">
-      <div class="user-row">
-        <div class="avatar">B</div>
+      <div class="user-row" id="sidebar-user-row" onclick="handleUserRowClick()">
+        <div class="avatar" id="sidebar-avatar">B</div>
         <div class="user-info">
-          <div class="user-name">Guest User</div>
-          <div class="user-email">Powered by LLaMA 3.1 · LocalLLM</div>
+          <div class="user-name" id="sidebar-name">Guest User</div>
+          <div class="user-email" id="sidebar-email">Sign in to save chats</div>
         </div>
+        <button class="sidebar-logout-btn" id="sidebar-logout-btn" style="display:none;" onclick="event.stopPropagation(); handleSignOut();" title="Sign out">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
       </div>
     </div>
   </nav>
@@ -1390,7 +1680,32 @@
 
   <div class="toast" id="toast"></div>
 
-  <script>
+  <script type="module">
+    /* ── FIREBASE V10 MODULAR IMPORTS (CDN) ── */
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithPopup,
+      GoogleAuthProvider,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      updateProfile,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      collection,
+      query,
+      orderBy,
+      onSnapshot,
+      deleteDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
     /* ── CONFIG & MODEL METADATA ── */
     const FREE_MSG_LIMIT = 20;
 
@@ -1408,6 +1723,16 @@
     let abortCtrl = null;
     let msgCount = parseInt(localStorage.getItem('br_msg_count') || '0');
     let loggedIn = false;
+
+    /* ── FIREBASE STATE ── */
+    let fbApp = null;
+    let fbAuth = null;
+    let fbDb = null;
+    let currentUser = null;
+    let unsubscribeChats = null;
+    let activeChatId = null;
+    let activeChatList = [];
+    let savedChats = JSON.parse(localStorage.getItem('gem_chats') || '[]');
 
     /* ── API KEY MANAGEMENT ── */
     function getApiKeys() {
@@ -1446,7 +1771,20 @@
       return false;
     }
 
-    function openSettingsModal() {
+    /* ── SETTINGS MODAL ── */
+    function switchSettingsTab(tab) {
+      const isKeys = tab === 'keys';
+      const tabKeys = document.getElementById('tab-cfg-keys');
+      const tabFb = document.getElementById('tab-cfg-firebase');
+      const panelKeys = document.getElementById('panel-cfg-keys');
+      const panelFb = document.getElementById('panel-cfg-firebase');
+      if (tabKeys) tabKeys.classList.toggle('active', isKeys);
+      if (tabFb) tabFb.classList.toggle('active', !isKeys);
+      if (panelKeys) panelKeys.style.display = isKeys ? 'block' : 'none';
+      if (panelFb) panelFb.style.display = isKeys ? 'none' : 'block';
+    }
+
+    function openSettingsModal(defaultTab = 'keys') {
       const keys = getApiKeys();
       document.getElementById('key-openrouter').value = keys.openrouter || '';
       document.getElementById('key-gemini').value = keys.gemini || '';
@@ -1454,6 +1792,15 @@
       document.getElementById('key-anthropic').value = keys.anthropic || '';
       document.getElementById('key-openai').value = keys.openai || '';
       document.getElementById('key-xai').value = keys.xai || '';
+
+      const fbCfg = getFirebaseConfig();
+      if (fbCfg) {
+        document.getElementById('fb-apiKey').value = fbCfg.apiKey || '';
+        document.getElementById('fb-projectId').value = fbCfg.projectId || '';
+        document.getElementById('fb-authDomain').value = fbCfg.authDomain || '';
+        document.getElementById('fb-appId').value = fbCfg.appId || '';
+      }
+      switchSettingsTab(defaultTab);
       document.getElementById('settings-overlay').classList.add('open');
     }
 
@@ -1477,6 +1824,211 @@
       saveApiKeys(keys);
       closeSettingsModal();
       showToast('API Configuration saved! 🚀');
+    }
+
+    /* ── FIREBASE CONFIGURATION & INITIALIZATION ── */
+    function getFirebaseConfig() {
+      try {
+        return JSON.parse(localStorage.getItem('br_firebase_config') || 'null');
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function updateFirebaseStatusUI(connected, projectId = '') {
+      const pill = document.getElementById('fb-status-pill');
+      const text = document.getElementById('fb-status-text');
+      if (!pill || !text) return;
+      if (connected) {
+        pill.className = 'fb-status-pill connected';
+        text.textContent = 'Connected: ' + projectId;
+      } else {
+        pill.className = 'fb-status-pill disconnected';
+        text.textContent = 'Not Connected (Guest Mode · Local storage only)';
+      }
+    }
+
+    function initFirebase() {
+      const cfg = getFirebaseConfig();
+      if (cfg && cfg.apiKey && cfg.projectId) {
+        try {
+          if (!getApps().length) {
+            fbApp = initializeApp(cfg);
+          } else {
+            fbApp = getApps()[0];
+          }
+          fbAuth = getAuth(fbApp);
+          fbDb = getFirestore(fbApp);
+          updateFirebaseStatusUI(true, cfg.projectId);
+
+          onAuthStateChanged(fbAuth, (user) => {
+            handleAuthStateChange(user);
+          });
+          return true;
+        } catch (e) {
+          console.warn('Firebase init error:', e);
+          updateFirebaseStatusUI(false);
+          renderChatList(savedChats);
+          return false;
+        }
+      } else {
+        updateFirebaseStatusUI(false);
+        renderChatList(savedChats);
+        return false;
+      }
+    }
+
+    function handleFirebaseConfigPaste() {
+      const text = document.getElementById('fb-paste-area').value.trim();
+      try {
+        const match = text.match(/\{[\s\S]*\}/);
+        if (match) {
+          let jsonStr = match[0]
+            .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":')
+            .replace(/'/g, '"')
+            .replace(/,\s*\}/g, '}');
+          const parsed = JSON.parse(jsonStr);
+          if (parsed.apiKey) document.getElementById('fb-apiKey').value = parsed.apiKey;
+          if (parsed.projectId) document.getElementById('fb-projectId').value = parsed.projectId;
+          if (parsed.authDomain) document.getElementById('fb-authDomain').value = parsed.authDomain;
+          if (parsed.appId) document.getElementById('fb-appId').value = parsed.appId;
+          showToast('Config fields filled! ✨ Click Save.');
+        }
+      } catch (e) {
+        // Fallback or ignore
+      }
+    }
+
+    function saveFirebaseConfig() {
+      const cfg = {
+        apiKey: document.getElementById('fb-apiKey').value.trim(),
+        projectId: document.getElementById('fb-projectId').value.trim(),
+        authDomain: document.getElementById('fb-authDomain').value.trim(),
+        appId: document.getElementById('fb-appId').value.trim()
+      };
+      if (!cfg.apiKey || !cfg.projectId) {
+        showToast('Please provide at least API Key and Project ID');
+        return;
+      }
+      localStorage.setItem('br_firebase_config', JSON.stringify(cfg));
+      showToast('Firebase config saved! Connecting... 🚀');
+      closeSettingsModal();
+      initFirebase();
+    }
+
+    function disconnectFirebase() {
+      localStorage.removeItem('br_firebase_config');
+      document.getElementById('fb-apiKey').value = '';
+      document.getElementById('fb-projectId').value = '';
+      document.getElementById('fb-authDomain').value = '';
+      document.getElementById('fb-appId').value = '';
+      document.getElementById('fb-paste-area').value = '';
+      showToast('Firebase disconnected. Operating in local Guest mode.');
+      initFirebase();
+    }
+
+    /* ── AUTH OBSERVER & EVENT HANDLERS ── */
+    async function handleAuthStateChange(user) {
+      currentUser = user;
+      loggedIn = !!user;
+      const userSec = document.getElementById('topbar-user-section');
+      const sbAvatar = document.getElementById('sidebar-avatar');
+      const sbName = document.getElementById('sidebar-name');
+      const sbEmail = document.getElementById('sidebar-email');
+      const sbLogout = document.getElementById('sidebar-logout-btn');
+
+      if (user) {
+        const name = user.displayName || user.email.split('@')[0];
+        const initial = name.charAt(0).toUpperCase();
+        const avatarInner = user.photoURL 
+          ? `<img src="${user.photoURL}" alt="${escapeHtml(name)}" />`
+          : initial;
+
+        if (userSec) {
+          userSec.innerHTML = `
+            <div class="user-badge" onclick="openSettingsModal('firebase')" title="Connected: ${escapeHtml(user.email || name)}">
+              <div class="user-badge-avatar">${avatarInner}</div>
+              <span class="user-badge-name">${escapeHtml(name)}</span>
+              <button class="user-badge-signout" onclick="event.stopPropagation(); handleSignOut();" title="Sign out">✕</button>
+            </div>
+          `;
+        }
+        if (sbAvatar) sbAvatar.innerHTML = avatarInner;
+        if (sbName) sbName.textContent = name;
+        if (sbEmail) sbEmail.textContent = user.email || 'Cloud Sync Active';
+        if (sbLogout) sbLogout.style.display = 'flex';
+
+        // Real-time Firestore Chat Sync
+        if (fbDb) {
+          if (unsubscribeChats) unsubscribeChats();
+          try {
+            const q = query(collection(fbDb, 'users', user.uid, 'chats'), orderBy('updatedAt', 'desc'));
+            unsubscribeChats = onSnapshot(q, (snapshot) => {
+              const cloudChats = [];
+              snapshot.forEach(docSnap => {
+                const d = docSnap.data();
+                cloudChats.push({
+                  id: docSnap.id,
+                  title: d.title || 'Conversation',
+                  history: d.history || [],
+                  updatedAt: d.updatedAt
+                });
+              });
+              renderChatList(cloudChats);
+
+              // Auto-migrate guest chats if first time login
+              if (cloudChats.length === 0 && savedChats.length > 0) {
+                migrateGuestChats(user.uid);
+              }
+            }, (err) => {
+              console.warn('Firestore snapshot error:', err);
+              renderChatList(savedChats);
+            });
+          } catch (e) {
+            console.warn('Firestore query error:', e);
+            renderChatList(savedChats);
+          }
+        }
+      } else {
+        if (unsubscribeChats) { unsubscribeChats(); unsubscribeChats = null; }
+        if (userSec) {
+          userSec.innerHTML = `
+            <button class="sign-in-btn" id="sign-in-btn" onclick="openAuthModal('login')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Sign in
+            </button>
+          `;
+        }
+        if (sbAvatar) sbAvatar.textContent = 'B';
+        if (sbName) sbName.textContent = 'Guest User';
+        if (sbEmail) sbEmail.textContent = 'Sign in to save chats';
+        if (sbLogout) sbLogout.style.display = 'none';
+        renderChatList(savedChats);
+      }
+    }
+
+    async function migrateGuestChats(uid) {
+      if (!fbDb || !savedChats.length) return;
+      try {
+        for (const c of savedChats) {
+          const docId = 'chat_' + (c.id || Date.now());
+          await setDoc(doc(fbDb, 'users', uid, 'chats', docId), {
+            id: docId,
+            title: c.title || 'Conversation',
+            history: c.history || [],
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        }
+        savedChats = [];
+        localStorage.removeItem('gem_chats');
+        showToast('Guest chats synced to your Firebase account! ☁️');
+      } catch (e) {
+        console.warn('Migration error:', e);
+      }
     }
 
     /* ── AUTH MODAL ── */
@@ -1506,33 +2058,114 @@
         : 'Free — no credit card required. Start chatting instantly.';
     }
 
-    function afterAuth(name) {
-      loggedIn = true;
-      msgCount = 0;
-      localStorage.setItem('br_msg_count', '0');
-      document.getElementById('sign-in-btn').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${name}`;
-      closeAuthModal();
-      showToast('Welcome, ' + name + '! 🎉');
+    async function handleGoogleAuth() {
+      if (!fbAuth) {
+        showToast('Please connect Firebase in Settings first');
+        openSettingsModal('firebase');
+        return;
+      }
+      try {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        const res = await signInWithPopup(fbAuth, provider);
+        const u = res.user;
+        if (fbDb && u) {
+          try {
+            await setDoc(doc(fbDb, 'users', u.uid), {
+              uid: u.uid,
+              email: u.email || '',
+              displayName: u.displayName || u.email.split('@')[0],
+              photoURL: u.photoURL || '',
+              updatedAt: serverTimestamp(),
+              createdAt: serverTimestamp(),
+              messageCount: 0
+            }, { merge: true });
+          } catch(e) { console.warn('Profile write error:', e); }
+        }
+        closeAuthModal();
+        showToast(`Welcome back, ${u.displayName || 'friend'}! 🎉`);
+      } catch (err) {
+        console.error('Google Auth Error:', err);
+        if (err.code === 'auth/popup-closed-by-user') return;
+        if (err.code === 'auth/unauthorized-domain') {
+          showToast('Domain not authorized in Firebase Console > Authentication > Settings');
+        } else {
+          showToast('Google sign-in error: ' + (err.message || err.code));
+        }
+      }
     }
 
-    function doLogin() {
+    async function doLogin() {
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
-      if (!email || !pass) { showToast('Please fill in all fields'); return; }
-      afterAuth(email.split('@')[0]);
+      if (!email || !pass) { showToast('Please enter email and password'); return; }
+      if (!fbAuth) {
+        showToast('Please connect Firebase in Settings first');
+        openSettingsModal('firebase');
+        return;
+      }
+      try {
+        await signInWithEmailAndPassword(fbAuth, email, pass);
+        closeAuthModal();
+        showToast('Welcome back! 🎉');
+      } catch (err) {
+        console.error('Login error:', err);
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+          showToast('Incorrect email or password');
+        } else {
+          showToast('Login failed: ' + (err.message || err.code));
+        }
+      }
     }
 
-    function doSignup() {
+    async function doSignup() {
       const name = document.getElementById('signup-name').value.trim();
       const email = document.getElementById('signup-email').value.trim();
       const pass = document.getElementById('signup-pass').value;
       if (!name || !email || !pass) { showToast('Please fill in all fields'); return; }
-      if (pass.length < 8) { showToast('Password must be at least 8 characters'); return; }
-      afterAuth(name);
+      if (pass.length < 6) { showToast('Password must be at least 6 characters'); return; }
+      if (!fbAuth) {
+        showToast('Please connect Firebase in Settings first');
+        openSettingsModal('firebase');
+        return;
+      }
+      try {
+        const cred = await createUserWithEmailAndPassword(fbAuth, email, pass);
+        await updateProfile(cred.user, { displayName: name });
+        if (fbDb) {
+          try {
+            await setDoc(doc(fbDb, 'users', cred.user.uid), {
+              uid: cred.user.uid,
+              email: email,
+              displayName: name,
+              photoURL: '',
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+              messageCount: 0
+            }, { merge: true });
+          } catch(e) { console.warn('User profile create error:', e); }
+        }
+        closeAuthModal();
+        showToast(`Account created! Welcome, ${name}! 🎉`);
+      } catch (err) {
+        console.error('Signup error:', err);
+        if (err.code === 'auth/email-already-in-use') {
+          showToast('Email is already registered. Please sign in.');
+        } else {
+          showToast('Sign-up failed: ' + (err.message || err.code));
+        }
+      }
     }
 
-    function handleGoogleAuth() {
-      showToast('Google sign-in coming soon — use email for now');
+    async function handleSignOut() {
+      if (fbAuth) {
+        try {
+          await signOut(fbAuth);
+        } catch(e) { console.error('Sign out error:', e); }
+      }
+      handleAuthStateChange(null);
+      newChat();
+      showToast('Signed out');
     }
 
     /* ── DOM & UI HELPERS ── */
@@ -2135,11 +2768,80 @@ Respond with ONLY valid JSON:
       stopBtnEl.classList.toggle('visible', b);
     }
 
+    /* ── CHAT LIST RENDERING & PERSISTENCE ── */
+    function renderChatList(chats) {
+      activeChatList = chats || [];
+      const container = document.getElementById('chat-list');
+      const badge = document.getElementById('chat-count-badge');
+      if (badge) badge.textContent = activeChatList.length;
+      if (!container) return;
+      if (!activeChatList.length) {
+        container.innerHTML = '<div class="chat-empty">No saved chats yet.<br>Start a conversation!</div>';
+        return;
+      }
+      container.innerHTML = activeChatList.map(c => `
+        <div class="chat-item ${c.id === activeChatId ? 'active' : ''}" id="chat-item-${c.id}" onclick="loadChat('${c.id}')" title="${escapeHtml(c.title)}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="chat-item-title">${escapeHtml(c.title)}</span>
+          <button class="chat-item-del" onclick="deleteChat('${c.id}', event)" title="Delete chat">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function loadChat(id) {
+      const list = activeChatList.length ? activeChatList : savedChats;
+      const target = list.find(c => c.id === id);
+      if (!target) return;
+      activeChatId = id;
+      history = [...target.history];
+      if (welcomeEl) welcomeEl.style.display = 'none';
+      msgsInner.innerHTML = '';
+      history.forEach(m => {
+        if (m.role === 'user') appendUser(m.content);
+        else appendAssistant(m.content, m.route);
+      });
+      document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
+      const activeEl = document.getElementById(`chat-item-${id}`);
+      if (activeEl) activeEl.classList.add('active');
+      scrollBottom();
+      clearRosterHighlight();
+    }
+
+    async function deleteChat(id, event) {
+      if (event) event.stopPropagation();
+      if (loggedIn && currentUser && fbDb) {
+        try {
+          await deleteDoc(doc(fbDb, 'users', currentUser.uid, 'chats', id));
+          showToast('Chat deleted from cloud');
+        } catch(e) {
+          console.warn('Delete cloud chat error:', e);
+          showToast('Failed to delete: ' + e.message);
+        }
+      } else {
+        savedChats = savedChats.filter(c => c.id !== id);
+        localStorage.setItem('gem_chats', JSON.stringify(savedChats));
+        renderChatList(savedChats);
+        showToast('Chat deleted');
+      }
+      if (activeChatId === id) {
+        newChat();
+      }
+    }
+
     /* ── NEW CHAT ── */
     function newChat() {
+      activeChatId = null;
       history = [];
       msgsInner.innerHTML = '';
       clearRosterHighlight();
+      document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
       const w = document.createElement('div');
       w.className = 'welcome';
       w.id = 'welcome';
@@ -2170,31 +2872,71 @@ Respond with ONLY valid JSON:
       ta.focus();
     }
 
-    /* ── HISTORY PERSISTENCE ── */
-    let savedChats = JSON.parse(localStorage.getItem('gem_chats') || '[]');
-
-    function saveHistory() {
+    /* ── CLOUD & LOCAL HISTORY PERSISTENCE ── */
+    async function saveHistory() {
       if (history.length < 2) return;
-      const title = history[0].content.slice(0, 40) + (history[0].content.length > 40 ? '…' : '');
-      const id = Date.now();
-      savedChats.unshift({ id, title, history: [...history] });
-      savedChats = savedChats.slice(0, 20);
-      localStorage.setItem('gem_chats', JSON.stringify(savedChats));
+      const title = history[0].content.slice(0, 45) + (history[0].content.length > 45 ? '…' : '');
+      const id = activeChatId || ('chat_' + Date.now());
+      activeChatId = id;
+
+      if (loggedIn && currentUser && fbDb) {
+        try {
+          await setDoc(doc(fbDb, 'users', currentUser.uid, 'chats', id), {
+            id: id,
+            title: title,
+            history: history.map(m => ({
+              role: m.role,
+              content: m.content,
+              route: m.route || null
+            })),
+            updatedAt: serverTimestamp(),
+            createdAt: serverTimestamp()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Error saving to Firestore:', err);
+        }
+      } else {
+        const existingIdx = savedChats.findIndex(c => c.id === id);
+        const chatObj = { id, title, history: [...history], updatedAt: Date.now() };
+        if (existingIdx >= 0) {
+          savedChats[existingIdx] = chatObj;
+        } else {
+          savedChats.unshift(chatObj);
+        }
+        savedChats = savedChats.slice(0, 30);
+        localStorage.setItem('gem_chats', JSON.stringify(savedChats));
+        renderChatList(savedChats);
+      }
     }
 
-    function loadChat(c) {
-      history = [...c.history];
-      if (welcomeEl) welcomeEl.style.display = 'none';
-      msgsInner.innerHTML = '';
-      history.forEach(m => {
-        if (m.role === 'user') appendUser(m.content);
-        else appendAssistant(m.content, m.route);
-      });
-      scrollBottom();
-    }
+    /* ── GLOBAL WINDOW BINDINGS (for inline HTML handlers) ── */
+    window.sendMessage = sendMessage;
+    window.newChat = newChat;
+    window.loadChat = loadChat;
+    window.deleteChat = deleteChat;
+    window.openAuthModal = openAuthModal;
+    window.closeAuthModal = closeAuthModal;
+    window.switchAuthTab = switchAuthTab;
+    window.doLogin = doLogin;
+    window.doSignup = doSignup;
+    window.handleGoogleAuth = handleGoogleAuth;
+    window.handleSignOut = handleSignOut;
+    window.handleUserRowClick = () => { if (!loggedIn) openAuthModal('login'); };
+    window.openSettingsModal = openSettingsModal;
+    window.closeSettingsModal = closeSettingsModal;
+    window.settingsOverlayClick = settingsOverlayClick;
+    window.overlayClick = overlayClick;
+    window.saveSettings = saveSettings;
+    window.switchSettingsTab = switchSettingsTab;
+    window.handleFirebaseConfigPaste = handleFirebaseConfigPaste;
+    window.saveFirebaseConfig = saveFirebaseConfig;
+    window.disconnectFirebase = disconnectFirebase;
+    window.stopGeneration = stopGeneration;
+    window.sendSuggestion = sendSuggestion;
 
-    // Auto-setup on load if #setup hash is present
+    /* ── INITIALIZATION ── */
     window.addEventListener('DOMContentLoaded', () => {
+      initFirebase();
       const activated = handleOneClickSetup();
       if (!activated) {
         const keys = getApiKeys();

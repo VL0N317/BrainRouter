@@ -88,20 +88,26 @@ BrainRouter works out of the box using a free public fallback. For instant speed
 
 Keys are saved exclusively in your browser's `localStorage` and sent directly to provider endpoints via client-side HTTPS. They never touch any server of mine.
 
-### Google sign-in (if you fork this)
+### Firebase Backend & Cloud Sync (Authentication & Firestore)
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create a project.
-2. APIs & Services → Credentials → Create OAuth Client ID → Web application.
-3. Add your domain to the authorized JavaScript origins.
-4. Replace `YOUR_GOOGLE_CLIENT_ID_HERE` in `index.html` with your client ID.
+BrainRouter connects to **Firebase Authentication** (Google OAuth + Email/Password) and **Cloud Firestore** for real-time, cross-device chat persistence:
+
+1. Create a free project at [console.firebase.google.com](https://console.firebase.google.com).
+2. Go to **Authentication** → **Sign-in method** → Enable **Google** and **Email/Password**.
+   - Make sure your hosting domain (`brain-router.vercel.app`, `localhost`, or your custom domain) is listed under **Authorized domains**.
+3. Go to **Firestore Database** → **Create database**. Deploy the security rules provided in [firestore.rules](firestore.rules).
+4. Go to **Project Settings** → **General** → **Your apps** → Register a Web App and copy the config object.
+5. In BrainRouter, open **Settings & Keys** (top right) → **Firebase Cloud Sync** → paste your config object and click **Save & Connect Firebase**.
+
+> **Offline / Guest Mode:** If Firebase is not configured, BrainRouter automatically operates in local Guest Mode, persisting conversations in `localStorage` without requiring sign-in. When you subsequently sign in, guest conversations are automatically synced to your cloud account!
 
 ---
 
 ## Tech stack
 
 - **Frontend**: Vanilla HTML5, CSS3, modern ES6+ JavaScript. Single-file architecture, zero build tools, zero dependencies.
+- **Backend & Database**: Firebase Authentication (Google OAuth + Email/Password) and Cloud Firestore with hardened security rules.
 - **Typography**: Google Fonts (Inter, Lora, JetBrains Mono)
-- **Auth**: Google Identity Services (OAuth 2.0)
 - **AI Providers**: Google AI Studio, Groq Cloud, OpenRouter, Anthropic, OpenAI, xAI, Pollinations.ai
 - **Hosting**: Vercel with custom domain ([brainrouter.co.in](https://brainrouter.co.in))
 
@@ -109,11 +115,7 @@ Keys are saved exclusively in your browser's `localStorage` and sent directly to
 
 ## Known limitations
 
-I'd rather list these than have you find them:
-
-- **Usage limits are enforced client-side.** The message counter lives in `localStorage`, so it can be cleared. The paywall popup is a prototype.
-- **Client-side direct API calls.** Calls are made directly from the browser, which requires CORS or browser-friendly endpoints (handled via direct headers, OpenRouter, or free proxy). A production app should hold keys in a serverless proxy.
-- **No sync across devices yet.** Chat history lives in your current browser session.
+- **Client-side direct API calls.** AI inference calls are made directly from the browser, which requires CORS or browser-friendly endpoints (handled via direct headers, OpenRouter, or free proxy).
 - **Router accuracy is probabilistic.** Like all LLM classifications, edge cases can occasionally route to an alternative model.
 
 ---
@@ -125,8 +127,10 @@ I'd rather list these than have you find them:
 - [x] Zero-config free tier fallback
 - [x] Groq LPU sub-second inference engine integration
 - [x] In-chat dynamic routing badges and real-time active roster pulse
-- [ ] Serverless backend on Vercel: keys held server-side, usage limits enforced for real
-- [ ] Database for accounts and chat history across devices
+- [x] Real Firebase Authentication (Google OAuth + Email/Password)
+- [x] Cloud Firestore cross-device chat sync with sidebar history & real-time listeners
+- [x] Hardened Firestore security rules (`firestore.rules`)
+- [ ] Serverless proxy backend on Vercel: keys held server-side
 - [ ] Stripe payments for Pro plan
 - [ ] Support for local models via WebLLM or local Ollama instances
 

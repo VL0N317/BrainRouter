@@ -1,0 +1,221 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// This security rules file assumes the following data structures:
+//
+// Collection: users
+// Document ID: {userId} (matches Firebase Auth UID)
+// Fields:
+//   - uid: string (required, immutable, must match request.auth.uid and userId, 1-128 chars)
+//   - email: string (required, valid RFC 5321 email format or empty string, max 254 chars)
+//   - displayName: string (required, max 100 chars)
+//   - photoURL: string (optional, valid HTTP/HTTPS URL or empty string, max 2048 chars)
+//   - createdAt: timestamp (required on create, immutable)
+//   - updatedAt: timestamp (required, recent/request.time)
+//   - messageCount: int (required, non-negative integer, 0 <= messageCount <= 100000)
+//
+// Subcollection: users/{userId}/chats
+// Document ID: {chatId}
+// Fields:
+//   - id: string (required, immutable, matches chatId, 1-100 chars)
+//   - title: string (required, max 200 chars)
+//   - createdAt: timestamp (required on create, immutable)
+//   - updatedAt: timestamp (required, recent/request.time)
+//   - history: list of maps (required, max 500 items; each item has role in ['user', 'model', 'assistant'], content string max 100000 chars, and optional route map/string)
+//   - model: string (optional, max 100 chars)
+//   - userId: string (optional, immutable, must match parent userId if present, max 128 chars)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the request is from an authenticated user
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if the authenticated user owns the resource path
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Check if the user is owner based on document's internal uid field
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.uid;
+    }
+
+    // Verify UID field is unchanged or matches request.auth.uid on create
+    function uidUnchanged() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == request.auth.uid;
+    }
+
+    // Ensure uid field is not modified on update
+    function uidNotModified() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == resource.data.uid;
+    }
+
+    // Validate that all required fields are present in the document
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // Validate that only permitted fields are present in the document (Strict Schema)
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // Validate that immutable fields have not been modified during update
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // Validate URL format (must start with https:// or http://)
+    function isValidUrl(url) {
+      return url is string &&
+        (url.matches("^https://.*") || url.matches("^http://.*"));
+    }
+
+    // Validate standard RFC email format
+    function isValidEmail(email) {
+      return email is string &&
+        email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // Validate that a timestamp is recent (within the last 5 minutes) and not in the future
+    function isRecent(time) {
+      return time is timestamp &&
+        time > request.time - duration.value(5, 'm') &&
+        time <= request.time;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    // Validate a single message entry inside the chat history array
+    function isValidMessage(msg) {
+      return msg is map &&
+        msg.keys().hasAll(['role', 'content']) &&
+        msg.keys().hasOnly(['role', 'content', 'route']) &&
+        msg.role is string &&
+        msg.role in ['user', 'model', 'assistant'] &&
+        msg.content is string &&
+        msg.content.size() <= 100000 &&
+        (!('route' in msg) || (
+          (msg.route is string && msg.route.size() <= 200) ||
+          (msg.route is map &&
+           msg.route.size() <= 10 &&
+           (!('model' in msg.route) || (msg.route.model is string && msg.route.model.size() <= 100)) &&
+           (!('reason' in msg.route) || (msg.route.reason is string && msg.route.reason.size() <= 500)))
+        ));
+    }
+
+    // Validate the chat history array
+    function isValidHistory(history) {
+      return history is list &&
+        history.size() <= 500 &&
+        (history.size() == 0 || isValidMessage(history[0])) &&
+        (history.size() <= 1 || isValidMessage(history[history.size() - 1]));
+    }
+
+    // Domain validator for users/{userId} documents (called on both create and update)
+    function isValidUser(data) {
+      return data.keys().hasOnly(['uid', 'email', 'displayName', 'photoURL', 'createdAt', 'updatedAt', 'messageCount']) &&
+        data.keys().hasAll(['uid', 'email', 'displayName', 'createdAt', 'updatedAt', 'messageCount']) &&
+        data.uid is string &&
+        data.uid.size() > 0 &&
+        data.uid.size() <= 128 &&
+        data.email is string &&
+        data.email.size() <= 254 &&
+        (data.email.size() == 0 || isValidEmail(data.email)) &&
+        data.displayName is string &&
+        data.displayName.size() <= 100 &&
+        (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 2048 && (data.photoURL.size() == 0 || isValidUrl(data.photoURL)))) &&
+        data.createdAt is timestamp &&
+        data.createdAt <= request.time &&
+        data.updatedAt is timestamp &&
+        (data.updatedAt == request.time || isRecent(data.updatedAt)) &&
+        data.messageCount is int &&
+        data.messageCount >= 0 &&
+        data.messageCount <= 100000;
+    }
+
+    // Domain validator for chats/{chatId} documents (called on both create and update)
+    function isValidChat(data, chatId, userId) {
+      return data.keys().hasOnly(['id', 'title', 'createdAt', 'updatedAt', 'history', 'model', 'userId']) &&
+        data.keys().hasAll(['id', 'title', 'createdAt', 'updatedAt', 'history']) &&
+        data.id is string &&
+        data.id.size() > 0 &&
+        data.id.size() <= 100 &&
+        data.id == chatId &&
+        data.title is string &&
+        data.title.size() <= 200 &&
+        data.createdAt is timestamp &&
+        data.createdAt <= request.time &&
+        data.updatedAt is timestamp &&
+        (data.updatedAt == request.time || isRecent(data.updatedAt)) &&
+        isValidHistory(data.history) &&
+        (!('model' in data) || (data.model is string && data.model.size() <= 100)) &&
+        (!('userId' in data) || (data.userId is string && data.userId == userId));
+    }
+
+    // ===============================================================
+    // Root Match & Default Deny
+    // ===============================================================
+
+    // Deny all other collections and documents by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ===============================================================
+    // Collection: users
+    // ===============================================================
+    match /users/{userId} {
+      // Profile document: Owner-only access (no public read/write)
+      allow read: if isOwner(userId);
+
+      allow create: if isOwner(userId) &&
+        isValidUser(request.resource.data) &&
+        request.resource.data.uid == userId &&
+        uidUnchanged() &&
+        (request.resource.data.createdAt == request.time || isRecent(request.resource.data.createdAt));
+
+      allow update: if isOwner(userId) &&
+        isValidUser(request.resource.data) &&
+        areImmutableFieldsUnchanged(['uid', 'createdAt']) &&
+        uidNotModified();
+
+      allow delete: if isOwner(userId);
+
+      // =============================================================
+      // Subcollection: users/{userId}/chats
+      // =============================================================
+      match /chats/{chatId} {
+        // Chat documents: Strict owner-only access
+        allow read: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+          isValidChat(request.resource.data, chatId, userId) &&
+          (request.resource.data.createdAt == request.time || isRecent(request.resource.data.createdAt));
+
+        allow update: if isOwner(userId) &&
+          isValidChat(request.resource.data, chatId, userId) &&
+          areImmutableFieldsUnchanged(['id', 'createdAt']) &&
+          (!('userId' in resource.data) || areImmutableFieldsUnchanged(['userId']));
+
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}
